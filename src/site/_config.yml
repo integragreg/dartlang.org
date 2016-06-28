@@ -4,12 +4,18 @@ source: .
 destination: ../../build/static
 markdown: kramdown
 permalink: /news/:year/:month/:day/:title.html
-pygments: false
+highlighter: null
+url: https://www.dartlang.org
 custom:
+  dartpad:
+    embed-dart-prefix: "https://dartpad.dartlang.org/embed-dart.html"
+    embed-html-prefix: "https://dartpad.dartlang.org/embed-html.html"
+    embed-inline-prefix: "https://dartpad.dartlang.org/embed-inline.html"
+    direct-link: "https://dartpad.dartlang.org"
   downloads:
-    dartarchive-be-url-prefix: "http://storage.googleapis.com/dart-archive/channels/be/raw"
-    dartarchive-dev-url-prefix: "http://storage.googleapis.com/dart-archive/channels/dev/release"
-    dartarchive-stable-url-prefix: "http://storage.googleapis.com/dart-archive/channels/stable/release"
+    dartarchive-be-url-prefix: "https://storage.googleapis.com/dart-archive/channels/be/raw"
+    dartarchive-dev-url-prefix: "https://storage.googleapis.com/dart-archive/channels/dev/release"
+    dartarchive-stable-url-prefix: "https://storage.googleapis.com/dart-archive/channels/stable/release"
     binaries:
       - os: windows
         name: Windows
@@ -29,3 +35,5 @@ asset_bundler:
   compress:
     js: yui
     css: yui
+gems:
+  - jekyll-sitemap

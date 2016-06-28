@@ -1,51 +1,93 @@
 ---
 layout: homepage
+js:
+- url: /js/carousel-next.js
+  defer: true
 ---
 
   <div class="container-page">
     <div class="container-full hero-hldr">
-      <div class="hero container">
-        <div class="row">
-          <div class="col-md-10 col-md-offset-1">
-            <h1>Dart is a new platform<br> for scalable web app engineering.</h1>
-            <ul>
-              <li>Language</li>
-              <li>Libraries</li>
-              <li>Tools</li>
-              <li>Compilation to JavaScript</li>
-            </ul>
-            {% include downloads/_dart-editor.html buttonclass="btn btn-default btn-lg download-btn" %}
-          </div>
-        </div>
-      </div>
-    </div>
+      <div id="top-carousel" class="carousel slide dart-carousel" data-interval="false">
 
-    <div class="container-full sub-hero-hldr">
-      <div id="feed-posts" class="sub-hero container">
-      </div>
-    </div>
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#top-carousel" data-slide-to="0" class="active">Welcome to Dart!</li>
+          <li data-target="#top-carousel" data-slide-to="1">Try Dart</li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" height="500px">
+
+          <!-- SLIDE 1: original hero content -->
+          <div class="item active">
+            <div class="hero container">
+              <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                  <h1>Scalable, productive app development</h1>
+              	    <p>
+                    Dart is an open-source, scalable programming language, with
+                    robust libraries and runtimes, for building web, server, and
+                    mobile apps.
+              	    </p>
+
+                    <button class="btn btn-lg try-btn" id="carousel-next">
+                      Try Dart
+                    </button>
+
+                    <div class="editor-current-version version">
+                      Current stable version of Dart:
+                      <span class="editor-build-rev-stable">[calculating]</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-full sub-hero-hldr">
+              <div id="feed-posts" class="sub-hero container">
+              </div>
+            </div>
+          </div>
+
+          <!-- SLIDE 2: dartpad -->
+          <div class="item code-hldr" style="padding-top: 24px; height: 460px">
+            {% comment %}
+            https://dartpad.dartlang.org/a6907e26b96678b75303
+            https://gist.github.com/a6907e26b96678b75303
+            verticalRatio set to a value that makes output have no scrollbar.
+            {% endcomment %}
+            <iframe src="{{site.custom.dartpad.embed-dart-prefix}}?id=a6907e26b96678b75303&verticalRatio=73"
+                    width="100%" height="100%"
+                    style="border: 1px solid #ccc;"></iframe>
+          </div>
+        </div> <!-- END slides -->
+      </div> <!-- END carousel -->
+    </div> <!-- END hero -->
 
     <div class="container dart-container">
-      
       <section class="dart-ctas">
         <div class="row">
           <div class="col-md-10 col-md-offset-1">
             <div class="row">
               <div class="col-md-4">
-                <h2>See Dart</h2>
+                <h2>
+                  <a id="see-code" href="#code" data-slide="true">See Dart</a>
+		</h2>
                 <p class="timer"><i class="sprite-icon-timer"></i>About 5 minutes</p>
                 <p>Dart is class based and object oriented, without being dogmatic.</p>
                 <a id="see-code" href="#code" data-slide="true"><i class="sprite-icon-triangle"></i>See code</a>
               </div>
               <div class="col-md-4">
-                <h2>Write Dart</h2>
+                <h2>
+                  <a href="/codelabs/darrrt/">Write Dart</a>
+		</h2>
                 <p class="timer"><i class="sprite-icon-timer"></i>Under an hour</p>
                 <p>Follow this code lab to create a Dart web app, even if you've never written
             		a web app before. </p>
                 <a href="/codelabs/darrrt/"><i class="sprite-icon-triangle"></i>Write code</a>
               </div>
               <div class="col-md-4">
-                <h2>Dive deep</h2>
+                <h2>
+                  <a href="/docs/">Dive deep</a>
+		</h2>
                 <p class="timer"><i class="sprite-icon-timer"></i>About 1 day</p>
                 <p>Dart has lots of <a href="#tools">tools</a>,
                 <a href="#libraries">libraries</a>, and documentation,
@@ -81,7 +123,7 @@ layout: homepage
                 <div class="item active">
                   <p>You can probably already read and even write Dart code. <a href="/samples/">See more samples.</a> </p>
                   <div class="code-hldr">
-<pre class="prettyprint lang-dart">
+<pre class="prettyprint lang-dart allow-scroll">
 import 'dart:math' show Random;        // Import a class from a library.
 
 void main() {                          // The app starts executing here.
@@ -102,7 +144,7 @@ class Die {                            // Define a class.
     }
   }
   int roll() {                         // Define an instance method.
-    return value = shaker.nextInt(sides); // Get a random number.
+    return value = shaker.nextInt(sides) + 1; // Get a random number.
   }
 }
 </pre>
@@ -111,7 +153,7 @@ class Die {                            // Define a class.
                 <div class="item">
                   <p>Write less. Say more.</p>
                   <div class="code-hldr">
-<pre class="prettyprint lang-dart">
+<pre class="prettyprint lang-dart allow-scroll">
 import 'dart:math' show PI;
 
 List shapes = <a href="#" class="dart-popover" data-toggle="popover" title="Empty list literal" data-html="true" data-trigger="hover focus" data-content="Empty square brackets form an empty list literal, which creates a new, empty List object. This is equivalent to new List().">[]</a>;                     // Use literals to create lists.
@@ -143,7 +185,7 @@ class Ellipse extends Shape {
                   Or don’t. Dart is truly dynamic.</p>
                   <div class="code-hldr">
                           <div style="padding-top:20px;">While prototyping, code freely without worrying about types.</div>
-<pre class="prettyprint lang-dart">
+<pre class="prettyprint lang-dart allow-scroll">
 // A function without types.
 recalculate(origin, offset, estimate) {
   // ...
@@ -151,7 +193,7 @@ recalculate(origin, offset, estimate) {
 </pre>
                           <div style="padding-top:20px;">During production, use types to learn about errors early,
                           communicate intent, and get help with code completion.</div>
-<pre class="prettyprint lang-dart">
+<pre class="prettyprint lang-dart allow-scroll">
 // A function with types (and an optional parameter).
 num recalculate(Point origin, num offset, {bool estimate: false}) {
   // ...
@@ -162,7 +204,7 @@ num recalculate(Point origin, num offset, {bool estimate: false}) {
                 <div class="item">
                   <p>Structure that scales. Organize your code with functions,
                   classes, mixins, and libraries.</p>
-                  <div class="code-hldr">  
+                  <div class="code-hldr">
   <img src="imgs/modular.png">
                   </div>
                 </div>
@@ -172,7 +214,7 @@ num recalculate(Point origin, num offset, {bool estimate: false}) {
           </div>
         </div>
       </section>
-      
+
       <section class="dart-libraries">
         <div class="row">
           <div class="col-md-10 col-md-offset-1" id="libraries">
@@ -190,8 +232,8 @@ num recalculate(Point origin, num offset, {bool estimate: false}) {
               <div class="carousel-inner">
                 <div class="item active">
                   <p>Every app can use lists, sets, and maps, all provided by Dart's core library.</p>
-                  <div class="code-hldr">        
-<pre class="prettyprint lang-dart">
+                  <div class="code-hldr">
+<pre class="prettyprint lang-dart allow-scroll">
 Map famousDuos = { 'Han Solo': 'Chewbacca',      // Map literal.
                    'Bonnie': 'Clyde',
                    'Laurel': 'Hardy' };
@@ -217,8 +259,8 @@ print(famousPeople.union(setOfMyFriends).length);
                 </div>
                 <div class="item">
                   <p>Dart's Future and Stream classes provide a consistent interface to values that aren’t yet available.</p>
-                  <div class="code-hldr">   
-<pre class="prettyprint lang-dart">
+                  <div class="code-hldr">
+<pre class="prettyprint lang-dart allow-scroll">
 // Get a stream of key-press events from an element:
 querySelector('textarea').<a href="#" class="dart-popover" data-toggle="popover" title="onKeyPress" data-html="true" data-trigger="hover focus" data-content="The onKeyPress field of an element is an instance of ElementStream, which provides notifications about key press events on the element.">onKeyPress</a>
 
@@ -246,7 +288,7 @@ querySelector('textarea').<a href="#" class="dart-popover" data-toggle="popover"
                   <p>Dart’s HTML library unlocks the power of the modern browser, smoothing over browser differences.</p>
                   <div class="code-hldr">
 
-<pre class="prettyprint lang-dart">
+<pre class="prettyprint lang-dart allow-scroll">
 import 'dart:html';
 import 'dart:convert' show JSON;
 
@@ -272,11 +314,11 @@ void showColors(Event e) {
                   </div>
                 </div>
                 <div class="item">
-                  <p>Use Dart's unit testing and mocking libraries
+                  <p>Use Dart's testing library
                   to make sure your app keeps working well.</p>
                   <div class="code-hldr">
 {% prettify dart %}
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'dart:math' show Point;
 
 main() {
@@ -352,6 +394,7 @@ main() {
                 <li data-target="#amazing-apps-carousel" data-slide-to="1"><i class="sprite-icon-app-2"></i></li>
                 <li data-target="#amazing-apps-carousel" data-slide-to="2"><i class="sprite-icon-app-3"></i></li>
                 <li data-target="#amazing-apps-carousel" data-slide-to="3"><i class="sprite-icon-app-4"></i></li>
+                <li data-target="#amazing-apps-carousel" data-slide-to="4"><i class="sprite-icon-app-5"></i></li>
               </ol>
               <!-- Wrapper for slides -->
               <div class="carousel-inner">
@@ -366,7 +409,7 @@ main() {
            <h4>&ldquo;We took a team of developers unfamiliar with Dart and were able to ship a sales force automation application in under six months. I think that's pretty amazing productivity.&rdquo;</h4>
                   <p class="person"><span class="title"></span></p>
                   <p class="company">Google CRM</p>
-                  
+
                 </div>
                 <div class="item">
            <h4>&ldquo;Being able to work well at scale is extremely important, and Dart is instrumental to this effort.&rdquo;</h4>
@@ -377,6 +420,11 @@ main() {
            <h4>&ldquo;When we first started exploring Dart, the team was very excited about its potential. After using it with Montage, we're even more convinced about its future.&rdquo;</h4>
                   <p class="person"><span class="title"></span></p>
                   <p class="company">Montage</p>
+                </div>
+                <div class="item">
+           <h4>&ldquo;Dart strikes a great balance between simplicity and functionality. It has an excellent asynchronous model and can run on the client and server. Dart makes development a pleasure.&rdquo;</h4>
+                  <p class="person"><span class="title"></span></p>
+                  <p class="company">Quire</p>
                 </div>
 
 
@@ -393,49 +441,51 @@ main() {
         <div class="row">
           <div class="col-md-12" id="tools">
             <h2>Dart’s tools help you be productive</h2>
-            <img src="/imgs/dart-editor.png" alt="Image of Dart Editor">
-            <p>Dart Editor is the easiest way to get started, helping you edit,
-              debug, and run Dart apps.
-              When you download Dart, you get
-              <a href="/tools/editor/">Dart Editor</a> and
-              <a href="/tools/">other tools</a>, as well:</p>
+            <p>
+              With <a href="{{site.custom.dartpad.direct-link}}">DartPad</a>,
+              you can write and run simple Dart programs in your browser.
+              Once you're ready to get serious, use whichever IDE or editor you like.
+              <a href="/tools/">Dart plugins</a> exist for WebStorm,
+              Sublime Text, and more.
+            </p>
+
+            <a href="{{site.custom.dartpad.direct-link}}"><img
+                src="imgs/dartpad.png" alt="screenshot of DartPad"
+                style="margin-bottom:0px"></a>
           </div>
         </div>
         <div class="row productivity-tools-options">
-          <div class="col-md-8 col-md-offset-2">
-            <div class="row">
-              <div class="col-md-4">
-                <h4>Pub package manager</h4>
-                <p>The easiest way to get and share Dart code, pub keeps your packages up to date, handling versioning and dependency.</p>
-              </div>
-              <div class="col-md-4">
-                <h4>Dev Server</h4>
-                <p>Automatically generate assets using pub’s dev server.</p>
-              </div>
-              <div class="col-md-4">
-                <h4>Dartium</h4>
-                <p>Experience zero-compile edit/refresh cycles. This build of Chromium includes the Dart VM.</p>
-              </div>
+          <div class="row">
+            <div class="col-md-4 col-md-offset-2">
+              <h4><a href="/tools/pub/">Pub package manager</a></h4>
+              <p>The easiest way to get and share Dart code, pub keeps your packages up to date, handling versioning and dependency.</p>
+            </div>
+            <div class="col-md-4">
+              <h4><a href="/tools/pub/cmd/pub-serve.html">Dev server</a></h4>
+              <p>Automatically generate assets using pub’s development server.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-md-offset-2">
+              <h4><a href="/tools/observatory/">Observatory</a></h4>
+              <p>Profile and debug your apps running in the Dart VM.</p>
+            </div>
+            <div class="col-md-4">
+              <h4><a href="/tools/dartium/">Dartium</a></h4>
+              <p>Experience zero-compile edit/refresh cycles. This build of Chromium includes the Dart VM.</p>
             </div>
           </div>
         </div>
-        
+
         <div class="row">
           <div class="col-md-12">
-          (For more download options, go to the
-           <a href="/tools/download.html">download page</a>.)
-
-
-          {% include downloads/_dart-editor.html buttonclass="btn btn-primary btn-lg" %}
+          {% include downloads/_dart.html buttonclass="btn-primary" %}
           </div>
           <aside class="alert alert-info os-choices col-md-8 col-md-offset-2">
             <b>Note:</b>
             You can write Dart apps using any recent version of
-            {% include os-choices.html %}
+            Windows, Linux, or Mac.
             The Dart development tools <b>do not&nbsp;support Windows XP</b>.
-            Dart Editor requires Java version 6 or higher. Problems?
-            See <a href="tools/editor/troubleshoot.html">Troubleshooting
-            Dart Editor</a>.
           </aside>
         </div>
       </section>

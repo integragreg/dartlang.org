@@ -1,15 +1,18 @@
 ---
 layout: default
 title: "pub upgrade"
+description: "Use pub upgrade to get the latest versions of all dependencies used by your Dart application."
 ---
+
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
 _Upgrade_ is one of the commands of the _pub_ tool.
 [Learn more about pub](/tools/pub/).
 
-{% prettify lang-sh %}
-$ pub upgrade [PACKAGE]
+{% prettify sh %}
+$ pub upgrade [dependencies...]
 {% endprettify %}
 
 Without any additional arguments, `pub upgrade` gets the latest versions of
@@ -18,7 +21,7 @@ current working directory, as well as their [transitive
 dependencies](/tools/pub/glossary.html#transitive-dependency), to the `packages`
 directory located next to the pubspec. For example:
 
-{% prettify lang-sh %}
+{% prettify sh %}
 $ pub upgrade
 Dependencies upgraded!
 {% endprettify %}
@@ -47,7 +50,7 @@ It's possible to tell `pub upgrade` to upgrade specific dependencies to the
 latest version while leaving the rest of the dependencies alone as much as
 possible. For example:
 
-    $ pub upgrade unittest args
+    $ pub upgrade test args
     Dependencies upgraded!
 
 Upgrading a dependency upgrades its transitive dependencies to their latest
@@ -81,7 +84,7 @@ However, by default, pub always tries to go online when you upgrade if you
 have any hosted dependencies so that it can see if newer versions of them are
 available. If you don't want it to do that, pass the `--offline` flag when
 running pub. In this mode, it only looks in your local package cache and
-try to find a set of versions that work with your package from what's already
+tries to find a set of versions that work with your package from what's already
 available.
 
 Keep in mind that pub *will* generate a lockfile after it does this. If the
@@ -93,3 +96,8 @@ run `pub upgrade` again to upgrade to a later version.
 
 For options that apply to all pub commands, see
 [Global options](/tools/pub/cmd/#global-options).
+
+<aside class="alert alert-info" markdown="1">
+*Problems?*
+See [Troubleshooting Pub](../troubleshoot.html).
+</aside>

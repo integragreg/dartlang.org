@@ -1,16 +1,19 @@
 ---
 layout: default
 title: "Pub Dependencies"
+description: Add other packages to your app. Specify package locations,
+             version constraints, and more.
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
 Dependencies are one of [pub](/tools/pub)'s core concepts.
-A dependency is another package
-that your package needs in order to work. Dependencies are specified in your
-[pubspec](pubspec.html). You only list
+A dependency is another package that your package needs in order to work.
+Dependencies are specified in your [pubspec](pubspec.html).
+You only list
 [immediate dependencies](glossary.html#immediate-dependency)&mdash;the
 software that your package uses directly. Pub handles
 [transitive dependencies](glossary.html#transitive-dependency) for you.
@@ -20,9 +23,10 @@ To see all the dependencies used by a package, use
 [`pub deps`](cmd/pub-deps.html).
 </aside>
 
-For each dependency, you specify the *name* of the package you depend on. For
-[library packages](glossary.html#library-package), you specify the *range of
-versions* of that package that you allow. You may also specify the
+For each dependency, you specify the *name* of the package you depend on.
+For [library packages](glossary.html#library-package),
+you specify the *range of versions* of that package that you allow.
+You may also specify the
 [*source*](glossary.html#source) which tells pub how the package can be located,
 and any additional *description* that the source needs to find the package.
 
@@ -40,13 +44,13 @@ dependency to a range of versions, you can provide a *version constraint*:
 
 {% prettify yaml %}
 dependencies:
-  transmogrify: '>=1.0.0 <2.0.0'
+  transmogrify: ^=1.0.0
 {% endprettify %}
 
 This creates a dependency on `transmogrify` using the default source and
 allowing any version from `1.0.0` to `2.0.0` (but not including `2.0.0`). See
-[Version constraints](#version-constraints) for details on the version
-constraint syntax.
+[Version constraints](#version-constraints) and [Caret syntax](#caret-syntax)
+for details on the version constraint syntax.
 
 If you want to specify a source, the syntax looks a bit different:
 
@@ -71,12 +75,13 @@ dependencies:
     hosted:
       name: transmogrify
       url: http://some-package-server.com
-    version: '>=1.0.0 <2.0.0'
+    version: ^=1.0.0
 {% endprettify %}
 
 This long form is used when you don't use the default source or when you have a
-complex description you need to specify. But in most cases, you'll just use the
-simple "name: version" form.
+complex description you need to specify.
+But in most cases, you'll just use the simple
+<code><em>packagename</em>: version</code> form.
 
 ## Dependency sources {#dependency-sources}
 
@@ -91,12 +96,12 @@ will be of this form, as shown in the following example:
 
 {% prettify yaml %}
 dependencies:
-  transmogrify: '>=0.4.0 <1.0.0'
+  transmogrify: ^1.4.0
 {% endprettify %}
 
-This specifies that your package depends on a hosted package named
-"transmogrify" and will work with any version from 0.4.0 to 1.0.0 (but not
-1.0.0 itself).
+This example specifies that your package depends on a hosted package named
+`transmogrify` and will work with any version from 1.4.0 to 2.0.0
+(but not 2.0.0 itself). 
 
 If you want to use your own package server, you can use a description that
 specifies its URL:
@@ -107,7 +112,7 @@ dependencies:
     hosted:
       name: transmogrify
       url: http://your-package-server.com
-    version: '>=0.4.0 <1.0.0'
+    version: ^1.4.0
 {% endprettify %}
 
 ### Git packages {#git-packages}
@@ -149,7 +154,7 @@ The ref can be anything that Git allows to [identify a commit][commit].
 
 Sometimes you find yourself working on multiple related packages at the same
 time. Maybe you are creating a framework while building an app that uses it.
-In those cases, during development you really want to depend on the "live"
+In those cases, during development you really want to depend on the _live_
 version of that package on your local file system. That way changes in one
 package are instantly picked up by the one that depends on it.
 
@@ -207,28 +212,29 @@ semantic versioning tells you that it should work (at least) up to `2.0.0`.
 
 A version constraint is a series of:
 
-<code>any</code>
-: The string "any" allows any version. This is equivalent to an empty
-    version constraint, but is more explicit.
+`any`
+: The string `any` allows any version. This is equivalent to an empty
+  version constraint, but is more explicit. **While `any` is allowed,
+  we do not recommend it for performance reasons.**
 
-<code>1.2.3</code>
+`1.2.3`
 : A concrete version number pins the dependency to only allow that
     <em>exact</em> version. Avoid using this when you can because it can cause
     version lock for your users and make it hard for them to use your package
     along with other packages that also depend on it.
 
-<code>&gt;=1.2.3</code>
+`>=1.2.3`
 : Allows the given version or any greater one. You'll typically use this.
 
-<code>&gt;1.2.3</code>
+`>1.2.3`
 : Allows any version greater than the specified one but <em>not</em> that
   version itself.
 
-<code>&lt;=1.2.3</code>
+`<=1.2.3`
 : Allows any version lower than or equal to the specified one. You
   <em>won't</em> typically use this.
 
-<code>&lt;1.2.3</code>
+`<1.2.3`
 : Allows any version lower than the specified one but <em>not</em> that
   version itself. This is what you'll usually use because it lets you specify
   the upper version that you know does <em>not</em> work with your package
@@ -236,15 +242,42 @@ A version constraint is a series of:
 
 You can specify version parts as you want, and their ranges are intersected
 together. For example, `>=1.2.3 <2.0.0` allows any version from `1.2.3` to
-`2.0.0` excluding `2.0.0` itself.
+`2.0.0` excluding `2.0.0` itself. An easier way to express this range is
+by using [caret syntax](#caret-syntax), or `^1.2.3`.
 
 <aside class="alert alert-info">
-
-Note that <code>&gt;</code> is also valid YAML syntax so you will want to quote
-the version string (like <code>'&lt;=1.2.3 &gt;2.0.0'</code>) if the version
+Note that `>` is also valid YAML syntax so you will want to quote
+the version string (like `'<=1.2.3 >2.0.0'`) if the version
 constraint starts with that.
-
 </aside>
+
+### Caret syntax
+
+_Caret syntax_ provides a more compact way of expressing the most common
+sort of version constraint.
+`^version` means "the range of all versions guaranteed to be backwards
+compatible with the specified version", and follows pub's convention for
+[semantic versioning](/tools/pub/versioning.html#semantic-versions).
+For example, `^1.2.3` is equivalent to `'>=1.2.3 <2.0.0'`, and
+`^0.1.2` is equivalent to `'>=0.1.2 <0.2.0'`.
+The following is an example of caret syntax:
+
+{% prettify yaml %}
+dependencies:
+  path: ^1.3.0
+  collection: ^1.1.0
+  string_scanner: ^0.1.2
+{% endprettify %}
+
+Note that caret syntax was added in Dart 1.8.3. Older versions of Dart
+don't understand it, so you'll need to include an SDK constraint (using
+traditional syntax) to ensure that older versions of pub will not try
+to process it. For example:
+
+{% prettify yaml %}
+environment:
+  sdk: '>=1.8.3 <2.0.0'
+{% endprettify %}
 
 ## Dev dependencies {#dev-dependencies}
 
@@ -252,26 +285,26 @@ Pub supports two flavors of dependencies: regular dependencies and *dev
 dependencies.* Dev dependencies differ from regular dependencies in that *dev
 dependencies of packages you depend on are ignored*. Here's an example:
 
-Say the `transmogrify` package uses the `unittest` package in its tests and only
+Say the `transmogrify` package uses the `test` package in its tests and only
 in its tests. If someone just wants to use `transmogrify`&mdash;import its
-libraries&mdash;it doesn't actually need `unittest`. In this case, it specifies
-`unittest` as a dev dependency. Its pubspec will have something like:
+libraries&mdash;it doesn't actually need `test`. In this case, it specifies
+`test` as a dev dependency. Its pubspec will have something like:
 
 {% prettify yaml %}
 dev_dependencies:
-  unittest: '>=0.5.0'
+  test: '>=0.5.0 <0.12.0'
 {% endprettify %}
 
 Pub gets every package that your package depends on, and everything *those*
 packages depend on, transitively. It also gets your package's dev dependencies,
 but it *ignores* the dev dependencies of any dependent packages. Pub only gets
 *your* package's dev dependencies. So when your package depends on
-`transmogrify` it will get `transmogrify` but not `unittest`.
+`transmogrify` it will get `transmogrify` but not `test`.
 
 The rule for deciding between a regular or dev dependency is simple: If
-the dependency is imported from something in your `lib` directory, it needs to
-be a regular dependency. If it's only imported from `test`, `example`, etc. it
-can and should be a dev dependency.
+the dependency is imported from something in your `lib` or `bin` directories,
+it needs to be a regular dependency. If it's only imported from `test`,
+`example`, etc. it can and should be a dev dependency.
 
 Using dev dependencies makes dependency graphs smaller. That makes `pub` run
 faster, and makes it easier to find a set of package versions that satisfies all
@@ -296,7 +329,7 @@ The pubspec would look something like the following:
 {% prettify yaml %}
 name: my_app
 dependencies:
-  transmogrify: '>= 1.2.0 <2.0.0'
+  transmogrify: ^1.2.0
 dependency_overrides:
   transmogrify:
     path: ../transmogrify_patch/
@@ -312,7 +345,7 @@ version of a package:
 {% prettify yaml %}
 name: my_app
 dependencies:
-  transmogrify: '>= 1.2.0 <2.0.0'
+  transmogrify: ^1.2.0
 dependency_overrides:
   transmogrify: '3.2.1'
 {% endprettify %}
@@ -325,17 +358,14 @@ may break your application.
 
 ---
 
-<!-- We can't use the built-in Markdown footnote syntax here because it
-     conflicts with the TOC header. -->
-<ol>
-<li id="fn:semver">
 
-Pub follows version <code>2.0.0-rc.1</code> of the semantic versioning spec,
-because that version allows packages to use build identifiers (e.g.
-<code>+12345</code>) to differentiate versions. <a href="#fnref:semver">↩</a>
+<aside id="fn:semver" class="footnote">
 
-</li>
-</ol>
+[1] Pub follows version `2.0.0-rc.1` of the semantic versioning spec,
+because that version allows packages to use build identifiers (`+12345`)
+to differentiate versions. <a href="#fnref:semver">↩</a>
 
-[pubsite]: http://pub.dartlang.org
+</aside>
+
+[pubsite]: https://pub.dartlang.org
 [semantic versioning]: http://semver.org/spec/v2.0.0-rc.1.html

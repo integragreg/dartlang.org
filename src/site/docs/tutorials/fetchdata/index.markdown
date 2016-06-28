@@ -5,10 +5,10 @@ description: "Use HttpRequest to fetch data from a file or a server."
 has-permalinks: true
 tutorial:
   id: fetchdata
-next: forms/
-next-title: "Get Input from a Form"
+next: cmdline/
+next-title: "Write Command-Line Apps"
 prev: streams/
-prev-title: "Use Streams for Data"
+prev-title: "Asynchronous Programming: Streams"
 ---
 
 {% capture whats_the_point %}
@@ -20,20 +20,10 @@ prev-title: "Use Streams for Data"
 
 {% endcapture %}
 
-{% capture sample_links %}
-
-<p> This tutorial features these examples:</p>
-* its_all_about_you
-* portmanteaux_simple
-* portmanteaux
-
-<p>
-Don't have the source code?
-<a href="https://github.com/dart-lang/dart-tutorials-samples/archive/master.zip">
-  Download it.
-</a>
-
-{% endcapture %}
+{% comment %}
+NOTE: No sample_links section goes here because all the samples are in embedded
+DartPads.
+{% endcomment %}
 
 {% capture content %}
 
@@ -43,7 +33,8 @@ Don't have the source code?
 </div>
 
 Web applications often use
-<a href="http://www.json.org/" target="_blank">JSON</a> (JavaScript Object Notation)
+<a href="http://www.json.org/" target="_blank">JSON</a>
+(JavaScript Object Notation)
 to pass data between clients and servers.
 Data can be _serialized_ into a JSON string,
 which is then passed between a client and server,
@@ -77,21 +68,144 @@ and simple data structures such as lists and maps
 can be serialized and represented by strings.
 
 **Try it!**
-The app running below, `its_all_about_you`,
+The following app, `its_all_about_you`,
 displays the JSON string for data of various types.
-Change the values of the input elements
+Click run ( <img src="/imgs/run.png" /> ) to start the app.
+Then change the values of the input elements,
 and check out the JSON format for each data type.
+You might prefer to 
+<a href="{{site.custom.dartpad.direct-link}}/245c841595786300b3f4" target="_blank">open the app in DartPad</a> 
+to have more space for the app's code and UI.
 
-<iframe class="running-app-frame"
-        style="height:500px;width:700px;"
-        src="examples/its_all_about_you/out/web/index.html">
+{% comment %}
+https://gist.github.com/Sfshaza/245c841595786300b3f4
+
+main.dart:
+// Copyright (c) 2015, the Dart project authors.
+// Please see the AUTHORS file for details.
+// All rights reserved. Use of this source code is governed
+// by a BSD-style license that can be found in the LICENSE file.
+
+import 'dart:html';
+import 'dart:convert';
+
+// Input fields
+InputElement favoriteNumber;
+InputElement valueOfPi;
+InputElement horoscope;
+InputElement favOne;
+InputElement favTwo;
+InputElement favThree;
+RadioButtonInputElement loveChocolate;
+RadioButtonInputElement noLoveForChocolate;
+
+// Result fields
+TextAreaElement intAsJson;
+TextAreaElement doubleAsJson;
+TextAreaElement stringAsJson;
+TextAreaElement listAsJson;
+TextAreaElement boolAsJson;
+TextAreaElement mapAsJson;
+
+void main() {
+
+  // Set up the input text areas.
+  favoriteNumber = querySelector('#favoriteNumber');
+  valueOfPi = querySelector('#valueOfPi');
+  horoscope = querySelector('#horoscope');
+  favOne = querySelector('#favOne');
+  favTwo = querySelector('#favTwo');
+  favThree = querySelector('#favThree');
+  loveChocolate = querySelector('#loveChocolate');
+  noLoveForChocolate = querySelector('#noLoveForChocolate');
+
+  // Set up the results text areas 
+  // to display the values as JSON.
+  intAsJson = querySelector('#intAsJson');
+  doubleAsJson = querySelector('#doubleAsJson');
+  boolAsJson = querySelector('#boolAsJson');
+  stringAsJson = querySelector('#stringAsJson');
+  listAsJson = querySelector('#listAsJson');
+  mapAsJson = querySelector('#mapAsJson');
+
+  // Set up the listeners.
+  favoriteNumber.onKeyUp.listen(showJson);
+  valueOfPi.onKeyUp.listen(showJson);
+  loveChocolate.onClick.listen(showJson);
+  noLoveForChocolate.onClick.listen(showJson);
+  horoscope.onKeyUp.listen(showJson);
+  favOne.onKeyUp.listen(showJson);
+  favTwo.onKeyUp.listen(showJson);
+  favThree.onKeyUp.listen(showJson);
+
+  _populateFromJson();
+  showJson(null);
+}
+
+// Pre-fill the form with some default values.
+void _populateFromJson() {
+
+  String jsonDataAsString = '''
+  { "favoriteNumber":73,
+    "valueOfPi":3.141592,
+    "chocolate":true,
+    "horoscope":"Cancer",
+    "favoriteThings":["monkeys",
+                      "parrots",
+                      "lattes"]
+  }
+  ''';
+
+  Map jsonData = JSON.decode(jsonDataAsString);
+
+  favoriteNumber.value = jsonData['favoriteNumber'].toString();
+  valueOfPi.value = jsonData['valueOfPi'].toString();
+  horoscope.value = jsonData['horoscope'].toString();
+  favOne.value = jsonData['favoriteThings'][0];
+  favTwo.value = jsonData['favoriteThings'][1];
+  favThree.value = jsonData['favoriteThings'][2];
+
+  if (jsonData['chocolate']) {
+    loveChocolate.checked = true;
+  } else {
+    noLoveForChocolate.checked = true;
+  }
+}
+
+// Display all values as JSON.
+void showJson(Event e) {
+  
+  // Grab the data that will be converted to JSON.
+  num favNum = int.parse(favoriteNumber.value);
+  num pi = double.parse(valueOfPi.value);
+  bool chocolate = loveChocolate.checked;
+  String sign = horoscope.value;
+  List<String> favoriteThings = [ favOne.value, favTwo.value, favThree.value ];
+
+  Map formData = {
+    'favoriteNumber': favNum,
+    'valueOfPi': pi,
+    'chocolate': chocolate,
+    'horoscope': sign,
+    'favoriteThings': favoriteThings
+  };
+
+  // Convert everything to JSON and display the results.
+  intAsJson.text    = JSON.encode(favNum);
+  doubleAsJson.text = JSON.encode(pi);
+  boolAsJson.text   = JSON.encode(chocolate);
+  stringAsJson.text = JSON.encode(sign);
+  listAsJson.text   = JSON.encode(favoriteThings);
+  mapAsJson.text    = JSON.encode(formData);
+}
+{% endcomment %}
+
+<iframe
+src="{{site.custom.dartpad.embed-html-prefix}}?id=245c841595786300b3f4&horizontalRatio=50&verticalRatio=90"
+    width="100%"
+    height="600px"
+    style="border: 1px solid #ccc;">
 </iframe>
-
-<aside class="alert">
-<strong>Version Note:</strong> The its_all_about_you app
-is compatible with
-<a href="https://pub.dartlang.org/packages/polymer#versions">polymer.dart 0.9</a>.
-</aside>
 
 The dart:convert library contains two convenient functions
 for working with JSON strings:
@@ -105,28 +219,56 @@ for working with JSON strings:
 To use these functions,
 you need to import dart:convert into your Dart code:
 
-{% highlight dart %}
+{% prettify dart %}
 import 'dart:convert';
-{% endhighlight %}
+{% endprettify %}
 
-The JSON.encode() and JSON.decode() functions can handle these Dart types automatically:
-<ul>
-<li> num</li>
-<li> String</li>
-<li> bool</li>
-<li> null</li>
-<li> List</li>
-<li> Map</li>
-</ul>
+The JSON.encode() and JSON.decode() functions can handle these Dart types
+automatically:
+
+* num
+* String
+* bool
+* null
+* List
+* Map
 
 ##Serializing data into JSON
 
 Use the JSON.encode() function to serialize an object that supports JSON.
-Here's the function, `showJson`, from the its_all_about_you example that
+The `showJson` function, from the its_all_about_you example,
 converts all of the data to JSON strings.
 
-<img class="scale-img-max" src="images/stringify.png"
-     alt="Use JSON.encode() to convert objects into JSON">
+{% prettify dart %}
+import 'dart:convert';
+...
+// Display all values as JSON.
+void showJson(Event e) {
+  
+  // Grab the data that will be converted to JSON.
+  num favNum = int.parse(favoriteNumber.value);
+  num pi = double.parse(valueOfPi.value);
+  bool chocolate = loveChocolate.checked;
+  String sign = horoscope.value;
+  List<String> favoriteThings = [ favOne.value, favTwo.value, favThree.value ];
+
+  Map formData = {
+    'favoriteNumber': favNum,
+    'valueOfPi': pi,
+    'chocolate': chocolate,
+    'horoscope': sign,
+    'favoriteThings': favoriteThings
+  };
+
+  // Convert everything to JSON and display the results.
+  [[highlight]]intAsJson.text    = JSON.encode(favNum);[[/highlight]]
+  [[highlight]]doubleAsJson.text = JSON.encode(pi);[[/highlight]]
+  [[highlight]]boolAsJson.text   = JSON.encode(chocolate);[[/highlight]]
+  [[highlight]]stringAsJson.text = JSON.encode(sign);[[/highlight]]
+  [[highlight]]listAsJson.text   = JSON.encode(favoriteThings);[[/highlight]]
+  [[highlight]]mapAsJson.text    = JSON.encode(formData);[[/highlight]]
+}
+{% endprettify %}
 
 Below is the JSON string that results from the code
 using the original values from the its_all_about_you app.
@@ -159,24 +301,24 @@ create Dart objects from a JSON string.
 The its_all_about_you example initially populates the values in the form
 from this JSON string:
 
-{% highlight dart %}
+{% prettify dart %}
 String jsonDataAsString = '''
-{ "favoriteNumber":44,
+{ "favoriteNumber":73,
   "valueOfPi":3.141592,
   "chocolate":true,
-  "horrorScope":"virgo",
-  "favoriteThings":["raindrops",
-                    "whiskers",
-                    "mittens"]
+  "horoscope":"Cancer",
+  "favoriteThings":["monkeys",
+                    "parrots",
+                    "lattes"]
 }
 ''';
 
 Map jsonData = JSON.decode(jsonDataAsString);
-{% endhighlight %}
+{% endprettify %}
 
-This code calls the JSON.decode() function with a properly formatted JSON string.
-<strong>Note that Dart strings can use either single or double quotes to denote strings.
-JSON requires double quotes.</strong>
+This code calls the JSON.decode() function with a properly formatted JSON
+string. <strong>Note that Dart strings can use either single or double
+quotes to denote strings. JSON requires double quotes.</strong>
 
 In this example, the full JSON string is hard coded into the Dart code,
 but it could be created by the form itself
@@ -236,11 +378,11 @@ a Dart web app running inside the browser can make only *limited*
 HTTP requests because of security restrictions.
 Practically speaking,
 because of these limitations,
-HTTP requests from web apps are useful only for
+HTTP requests from web apps are primarily useful for
 retrieving information in files specific to
 and co-located with the app.
 
-<aside class="alert" markdown="1">
+<aside class="alert alert-info" markdown="1">
 <strong>A note about security:</strong>
 Browsers place tight security restrictions on HTTP requests
 made by embedded apps.
@@ -257,7 +399,7 @@ through a mechanism called
 CORS (Cross-origin resource sharing),
 which uses headers in an HTTP request
 to ask for and receive permission.
-CORS is server-specific and not yet widely used.
+CORS is server specific.
 </aside>
 
 The SDK provides these useful classes for
@@ -274,18 +416,81 @@ formulating URIs and making HTTP requests:
 
 One useful HTTP request your web app *can* make is a GET request
 for a data file served from the same origin as the app.
-The example below,
-`portmanteaux_simple`, includes a data file
-called `portmanteaux_simple.json` that contains a JSON-formatted list of words.
+The example below reads a data file called `portmanteaux.json`
+that contains a JSON-formatted list of words.
 When you click the button,
 the app makes a GET request of the server
 and loads the file.
 
-**Try it!** Click the button.
+<aside class="alert alert-info" markdown="1">
+**Implementation note:**
+The original portmanteaux example loaded a co-located file:
 
-<iframe class="running-app-frame"
-        style="height:400px;width:300px;"
-        src="examples/portmanteaux_simple/portmanteaux_simple.html">
+<pre>
+var path = 'portmanteaux.json';
+</pre>
+
+When we moved the example into [**DartPad**]({{site.custom.dartpad.direct-link}}),
+we couldn't co-locate the JSON file because DartPad
+supports at most 3 files: one Dart file, one HTML file,
+and one CSS file.
+The workaround was to move `portmanteaux.json` to dartlang.org and
+configure dartlang.org's  CORS headers to allow read-only access
+from everywhere.
+</aside>
+
+**Try it!** Click run ( <img src="/imgs/run.png" /> )
+and then click the **Get portmanteaux** button.
+
+{% comment %}
+https://gist.github.com/Sfshaza/8640071ecb67b1309938
+
+main.dart:
+// Copyright (c) 2012, the Dart project authors.  
+// Please see the AUTHORS file for details. 
+// All rights reserved. Use of this source code 
+// is governed by a BSD-style license that can be 
+// found in the LICENSE file.
+
+import 'dart:async';
+import 'dart:convert';
+import 'dart:html';
+
+var wordList;
+
+void main() {
+  querySelector('#getWords').onClick.listen(makeRequest);
+  wordList = querySelector('#wordList');
+}
+
+Future makeRequest(Event e) async {
+  var path = 'https://www.dartlang.org/f/portmanteaux.json';
+  try {
+    processString(await HttpRequest.getString(path));
+  } catch (e) {
+    print('Couldn\'t open $path');
+    handleError(e);
+  }
+}
+
+processString(String jsonString) {
+  List<String> portmanteaux = JSON.decode(jsonString);
+  for (int i = 0; i < portmanteaux.length; i++) {
+    wordList.children.add(new LIElement()..text = portmanteaux[i]);
+  }
+}
+
+handleError(Object error) {
+  wordList.children.add(new LIElement()..text = 'Request failed.');
+}
+{% endcomment %}
+
+
+<iframe
+src="{{site.custom.dartpad.embed-html-prefix}}?id=8640071ecb67b1309938&horizontalRatio=68&verticalRatio=80"
+    width="100%"
+    height="500px"
+    style="border: 1px solid #ccc;">
 </iframe>
 
 This program uses a convenience method,
@@ -301,66 +506,18 @@ A Future is a way to perform potentially time-consuming operations,
 such as HTTP requests, asynchronously.
 If you haven't encountered Futures yet,
 you can learn more about them in
-[Use Future-Based APIs](/docs/tutorials/futures/).
+[Asynchronous Programming: Futures](/docs/tutorials/futures/).
 Until then, you can use the code above as an idiom
 and provide your own code for the body of the processString() function
 and your own code to handle the error.
 
-###Using a relative URI
-
-The URI used for the GET request specifies just the name of
-the portmanteaux_simple.json data file.
-Let's take a look at how that works.
-
-
-Open the application directory in Dart Editor,
-select the portmanteaux_simple.html file, and run the program.
-Before doing anything else,
-notice the URI for the program in Dartium.
-
-<img class="scale-img-max" src="images/uri-dart-program.png"
-     alt="URI for a Dart program running in Dartium">
-
-<ul>
-  <li markdown="1">
-The server designation 127.0.0.1 is the standard
-for referring to _this computer_&mdash;the computer
-on which the program is running.
-(`localhost` is a human-friendly synonym for 127.0.0.1.)
-  </li>
-
-  <li markdown="1">
-3030 is a port number.
-Because a computer can run multiple servers at once,
-to avoid conflicts each server _must_ listen on its own port.
-Port numbers from 0 to 1024 are called well-known ports
-and are reserved for use by system processes
-that provide widely used types of network services.
-Typically HTTP servers listen on port 80.
-On most systems,
-port numbers from 1024 to 49151
-are free to be used by any program.
-Dart Editor listens on port 3030.
-  </li>
-
-  <li markdown="1">
-The rest of the URI is the absolute pathname to the HTML file
-that hosts the app.
-  </li>
-</ul>
-
-The HttpRequest object resolves the file name to an absolute URI
-using the URI for the current web page as its basis.
-
-<img class="scale-img-max" src="images/relative-uri.png"
-     alt="A relative URI resolves to an absolute URI">
-
-The GET request in this
-example is successful because the app and the requested resource
-are from the same origin:
-
-<img class="scale-img-max" src="images/same-origin.png"
-     alt="The app and the data file have the same origin">
+<aside class="alert alert-info" markdown="1">
+**Note:**
+The examples in this section use the `async` and `await` keywords.
+If you are not familiar with these keywords, see
+[Asynchrony support](/docs/dart-up-and-running/ch02.html#asynchrony)
+in the [language tour](/docs/dart-up-and-running/ch02.html).
+</aside>
 
 ##Using an HttpRequest object to load a file {#making-a-get-request}
 
@@ -371,11 +528,57 @@ you need to create an HttpRequest object,
 configure its header and other information,
 and use the `send()` method to make the request.
 
-This section looks at a new
-version of the portmanteaux example,
-called portmanteaux,
-that has been rewritten
-to use an explicitly constructed HttpRequest object.
+This section rewrites the portmanteaux code to explicitly construct
+an HttpRequest object.
+
+{% comment %}
+https://gist.github.com/Sfshaza/83f7779d18a8bbe8ccb1
+
+main.dart:
+// Copyright (c) 2012, the Dart project authors.  
+// Please see the AUTHORS file for details. 
+// All rights reserved. Use of this source code 
+// is governed by a BSD-style license that can be 
+// found in the LICENSE file.
+
+import 'dart:html';
+import 'dart:convert';
+
+var wordList;
+
+void main() {
+  querySelector('#getWords').onClick.listen(makeRequest);
+  wordList = querySelector('#wordList');
+}
+
+void makeRequest(Event e) {
+  var path = 'https://www.dartlang.org/f/portmanteaux.json';
+  var httpRequest = new HttpRequest();
+  httpRequest
+    ..open('GET', path)
+    ..onLoadEnd.listen((e) => requestComplete(httpRequest))
+    ..send('');
+}
+
+requestComplete(HttpRequest request) {
+  if (request.status == 200) {
+    List<String> portmanteaux = JSON.decode(request.responseText);
+    for (int i = 0; i < portmanteaux.length; i++) {
+      wordList.children.add(new LIElement()..text = portmanteaux[i]);
+    }
+  } else {
+    wordList.children.add(new LIElement()
+      ..text = 'Request failed, status=${request.status}');
+  }
+}
+{% endcomment %}
+
+<iframe
+src="{{site.custom.dartpad.embed-html-prefix}}?id=83f7779d18a8bbe8ccb1&horizontalRatio=68&verticalRatio=80"
+    width="100%"
+    height="500px"
+    style="border: 1px solid #ccc;">
+</iframe>
 
 ###Setting up the HttpRequest object
 
@@ -385,6 +588,17 @@ configures it with a URI and callback function,
 and then sends the request.
 Let's take a look at the Dart code:
 
+{% prettify dart %}
+void makeRequest(Event e) {
+  var path = 'https://www.dartlang.org/f/portmanteaux.json';
+  var httpRequest = new HttpRequest();
+  httpRequest
+    ..open('GET', path)
+    ..onLoadEnd.listen((e) => requestComplete(httpRequest))
+    ..send('');
+}
+{% endprettify %}
+
 <img class="scale-img-max" src="images/portmanteaux-code.png"
      alt="Making an HTTP GET request">
 
@@ -392,9 +606,9 @@ Let's take a look at the Dart code:
 
 The send() method sends the request to the server.
 
-{% highlight dart %}
+{% prettify dart %}
 httpRequest.send('');
-{% endhighlight %}
+{% endprettify %}
 
 Because the request in this example is a simple GET request,
 the code can send an empty string.
@@ -440,14 +654,14 @@ The data file in the portmanteaux example,
 portmanteaux.json,
 contains a JSON-formatted list of strings.
 
-{% highlight dart %}
+{% prettify dart %}
 [
   "portmanteau", "fantabulous", "spork", "smog",
   "spanglish", "gerrymander", "turducken", "stagflation",
-  "Brangelina", "freeware", "oxbridge", "palimony",
+  "bromance", "freeware", "oxbridge", "palimony", "netiquette",
   "brunch", "blog", "chortle", "Hassenpfeffer", "Schnitzelbank"
 ]
-{% endhighlight %}
+{% endprettify %}
 
 Upon request, the server reads this data from the file
 and sends it as a single string
@@ -469,18 +683,15 @@ client and server programs.
 
 ##What next?
 
-* If you skipped the previous tutorial,
-[Use Future-Based APIs](/docs/tutorials/futures/),
+* If you skipped the 
+[Asynchronous Programming: Futures](/docs/tutorials/futures/) tutorial,
 we highly recommend that you go back and learn about Futures
 before going any further.
 
-* The next tutorial,
-[Get Input from a Form](/docs/tutorials/forms/),
-contains a client/server example that
-shows you how to use a form to get data from the user,
-and using JSON, send that form to a server,
-and handle the server's response.
-
+* See the Angular documentation for discussions and example code for
+[implementing forms](https://angular.io/docs/dart/latest/guide/forms.html)
+and
+[talking to a remote server](https://angular.io/docs/dart/latest/guide/server-communication.html).
 {% endcapture %}
 
 {% include tutorial.html %}

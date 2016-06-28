@@ -1,41 +1,50 @@
 application: dart-lang
 version: CHANGEME
-# NOTE: URL is CHANGEME.dart-lang.appspot.com
-#       To specify a name, change 'CHANGEME' to something
-#       like 'prod-zone-article'.
-#
-#       To deploy to dartlang.org (only from a clean master workspace)
-#       change CHANGEME to a date string: YYYY-MM-DD.
-#       For more information on making changes, see goto/dartsiteupdate.
-#
-# IMPORTANT: AFTER changing the version, DO THIS:
-#       make clean
-#       make build
+# DO NOT EDIT THE VERSION!
+# The build automatically changes the version to the name of your branch.
+# For more information, see README.md.
 
 runtime: python27
 api_version: 1
 threadsafe: true
 
-pagespeed:
-  enabled_rewriters:
-    - InlineImages
-    - CollapseWhitespace
-    - RemoveComments
-    - InlineJs
-  url_blacklist:
-    - http://www.dartlang.org/*/code/out/*
-    - https://www.dartlang.org/*/code/out/*
-
 #default_expiration: "1d"
 
 handlers:
+- url: /server/.*
+  script: scripts.redirector.application
+
 - url: /community/
   script: scripts.redirector.application
 
 - url: /\+
   script: scripts.redirector.application
 
+- url: /googleapis/?
+  script: scripts.redirector.application
+
+- url: /cloud/?
+  script: scripts.redirector.application
+
+- url: /mobile/?
+  script: scripts.redirector.application
+
+- url: /tools/docgen/?
+  script: scripts.redirector.application
+
+- url: /tools/dartdocgen/?
+  script: scripts.redirector.application
+
 - url: /docs/tutorials/web-ui/
+  script: scripts.redirector.application
+
+- url: /docs/tutorials/using-polymer/
+  script: scripts.redirector.application
+
+- url: /docs/tutorials/forms/
+  script: scripts.redirector.application
+
+- url: /docs/tutorials/indexeddb/
   script: scripts.redirector.application
 
 - url: /docs/tutorials/templates/
@@ -44,10 +53,10 @@ handlers:
 - url: /docs/tutorials/custom-elements/
   script: scripts.redirector.application
 
-- url: /docs/dart-up-and-running/ch0\d.html
+- url: /docs/dart-up-and-running/contents/.*
   script: scripts.redirector.application
 
-- url: /docs/dart-up-and-running/contents/ch04-tools-dartdoc.html
+- url: /docs/dart-up-and-running/ch05.html
   script: scripts.redirector.application
 
 - url: /mailing-list
@@ -56,10 +65,37 @@ handlers:
 - url: /docs/spec/dartLangSpec.*
   script: scripts.redirector.application
 
+- url: /docs/spec/proposedDartLangSpec.pdf
+  script: scripts.redirector.application
+
+- url: /docs/spec/deferred-loading.html
+  script: scripts.redirector.application
+
+- url: /docs/spec/latest/.*
+  script: scripts.redirector.application
+
 - url: /docs/getting-started/editor/.*
   script: scripts.redirector.application
 
 - url: /downloads.html
+  script: scripts.redirector.application
+
+- url: /tools/download-editor.html
+  script: scripts.redirector.application
+
+- url: /tools/download_archive.*
+  script: scripts.redirector.application
+
+- url: /tools/debian.html
+  script: scripts.redirector.application
+
+- url: /tools/download.html
+  script: scripts.redirector.application
+
+- url: /tools/more_downloads.html
+  script: scripts.redirector.application
+
+- url: /tools/download-archive.*
   script: scripts.redirector.application
 
 - url: /docs/language-tour.*
@@ -71,10 +107,31 @@ handlers:
 - url: /docs/pub-package-manager.*
   script: scripts.redirector.application
 
-- url: /tools/dartdoc/
+- url: /polymer-dart/reference/release-notes/
+  script: scripts.redirector.application
+
+- url: /polymer/.*
+  script: scripts.redirector.application
+
+- url: /polymer-dart/
+  script: scripts.redirector.application
+
+- url: /tools/dartdoc/?
+  script: scripts.redirector.application
+
+- url: /tools/dartfmt/?
+  script: scripts.redirector.application
+
+- url: /tools/analyzer/?
   script: scripts.redirector.application
 
 - url: /editor.*
+  script: scripts.redirector.application
+
+- url: /tools/editor.*
+  script: scripts.redirector.application
+
+- url: /tools/eclipse-plugin.*
   script: scripts.redirector.application
 
 - url: /docs/editor/getting-started/
@@ -101,9 +158,6 @@ handlers:
 - url: /dartium/.*
   script: scripts.redirector.application
 
-- url: /tools/analyzer
-  script: scripts.redirector.application
-
 - url: /docs/editor/.*
   script: scripts.redirector.application
 
@@ -122,7 +176,28 @@ handlers:
 - url: /resources/
   script: scripts.redirector.application
 
+- url: /articles/api-naming-guide/
+  script: scripts.redirector.application
+
+- url: /articles/doc-comment-guidelines/
+  script: scripts.redirector.application
+
+- url: /articles/idiomatic-dart/
+  script: scripts.redirector.application
+
+- url: /articles/style-guide/
+  script: scripts.redirector.application
+
 - url: /articles/using-future-based-apis/
+  script: scripts.redirector.application
+
+- url: /articles/dart-unit-tests/
+  script: scripts.redirector.application
+
+- url: /articles/mocking-with-dart/
+  script: scripts.redirector.application
+
+- url: /articles/writing-unit-tests-for-pub-packages/
   script: scripts.redirector.application
 
 - url: /articles/feet-wet-streams/
@@ -164,10 +239,37 @@ handlers:
 - url: /codelabs/web-ui-writer/
   script: scripts.redirector.application
 
+- url: /articles/web-ui/
+  script: scripts.redirector.application
+
+- url: /web-ui/observables/
+  script: scripts.redirector.application
+
+- url: /tools/observatory/
+  script: scripts.redirector.application
+
+- url: /codelabs/deploy/
+  script: scripts.redirector.application
+
+- url: /codelabs/server/
+  script: scripts.redirector.application
+
+- url: /codelabs/polymer/
+  script: scripts.redirector.application
+
 - url: /eclipse/update.*
   script: scripts.redirector.application
 
 - url: /events/2013/flight-school/
+  script: scripts.redirector.application
+
+- url: /dart2js-stripped-uri
+  script: scripts.redirector.application
+
+- url: /dart2js-reflection
+  script: scripts.redirector.application
+
+- url: /redirects/.*
   script: scripts.redirector.application
 
 - url: /is-dartisans-live-now
@@ -176,6 +278,9 @@ handlers:
 - url: /dartisans-live-config
   script: scripts.is_dartisans_live.application
   login: admin
+
+- url: /docs/serverguide.html
+  script: scripts.redirector.application
 
 - url: /bundles
   expiration: 7d
@@ -210,6 +315,9 @@ handlers:
   static_files: static\1
   upload: static
   secure: always
+  http_headers:
+    Access-Control-Allow-Origin: "*"
+    Access-Control-Allow-Methods: GET
 
 - url: .*
   script: scripts.redirector.application

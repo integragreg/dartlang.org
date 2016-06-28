@@ -4,6 +4,7 @@ title: "Glossary of Pub Terms"
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -63,27 +64,26 @@ To see the dependencies used by a package, use [`pub deps`](cmd/pub-deps.html).
 
 ### Entrypoint {#entrypoint}
 
-"Entrypoint" is used to mean two things. In the general context of Dart, it is
+_Entrypoint_ is used to mean two things. In the general context of Dart, it is
 a Dart library that is directly invoked by a Dart implementation. When you
 reference a Dart library in a `<script>` tag or pass it as a command line
 argument to the standalone Dart VM, that library is the entrypoint. In other
 words, it's usually the `.dart` file that contains `main()`.
 
-In the context of pub, an "entrypoint package" or "root package" is the root
+In the context of pub, an _entrypoint package_ or _root package_ is the root
 of a dependency graph. It will usually be an application. When you run your app,
 it's the entrypoint package. Every other package it depends on will not be an
 entrypoint in that context.
 
 A package can be an entrypoint in some contexts and not in others. Lets say your
 app uses a library package A. When you run your app, A is not the entrypoint
-package. However, if you go over to A and execute its unit tests, in that
+package. However, if you go over to A and execute its tests, in that
 context, it *is* the entrypoint since your app isn't involved.
 
 ### Entrypoint directory {#entrypoint-directory}
 
 A directory inside your package that is allowed to contain
-[Dart entrypoints](#entrypoint). Pub will ensure all of these directories get
-a "packages" directory, which is needed for "package:" imports to work.
+[Dart entrypoints](#entrypoint).
 
 Pub has a whitelist of these directories: `benchmark`, `bin`, `example`,
 `test`, `tool`, and `web`. Any subdirectories of those (except `bin`) may also
@@ -115,7 +115,7 @@ incompatible changes, library packages will usually require their dependencies'
 versions to be greater than or equal to the versions that were tested and less
 than the next major version. So if your library depended on the (fictional)
 `transmogrify` package and you tested it at version 1.2.1, your version
-constraint would be `">=1.2.1 <2.0.0"`.
+constraint would be [`^1.2.1`](dependencies.html#caret-syntax).
 
 ### Lockfile {#lockfile}
 
@@ -129,7 +129,8 @@ specific versions of packages. A lockfile ensures that you can recreate the
 exact configuration of packages used by an application.
 
 The lockfile is generated automatically for you by pub when you run
-[`pub get`](cmd/pub-get.html) or [`pub upgrade`](cmd/pub-upgrade.html).
+[`pub get`](cmd/pub-get.html), [`pub upgrade`](cmd/pub-upgrade.html),
+or [`pub downgrade`](cmd/pub-downgrade.html)..
 If your package is an application package, you will typically check this into
 source control. For library packages, you usually won't.
 
@@ -137,29 +138,37 @@ source control. For library packages, you usually won't.
 
 The declared versions of the Dart SDK itself that a package declares that it
 supports. An SDK constraint is specified using normal
-[version constraint](#version-constraint) syntax, but in a special "environment"
+[version constraint](#version-constraint) syntax, but in a special _environment_
 section [in the pubspec](pubspec.html#sdk-constraints).
 
 ### Source {#source}
 
 A kind of place that pub can get packages from. A source isn't a specific place
 like pub.dartlang.org or some specific Git URL. Each source describes a general
-procedure for accessing a package in some way. For example, "git" is one source.
+procedure for accessing a package in some way. For example, _git_ is one source.
 The git source knows how to download packages given a Git URL. Several
 different [supported sources](dependencies.html#sources) are available.
 
 ### System cache {#system-cache}
 
-When pub gets a remote package, it downloads it into a single "system cache"
-directory maintained by pub. When it generates a "packages" directory for a
-package, that only contains symlinks to the real packages in the system cache.
-On Mac and Linux, this directory defaults to `~/.pub-cache`. On Windows, it
-goes in `AppData\Roaming\Pub\Cache`.
+When pub gets a remote package,
+it downloads it into a single _system cache_ directory maintained by pub.
+On Mac and Linux, this directory defaults to `~/.pub-cache`.
+On Windows, it goes in `AppData\Roaming\Pub\Cache`.
+You can specify a different location using the
+[PUB_CACHE](/tools/pub/installing.html) environment variable.
 
-This means you only have to download a given version of a package once and can
-then reuse it in as many packages as you would like. It also means you can
-delete and regenerate your "packages" directory without having to access the
-network.
+Once packages are in the system cache,
+pub creates symbolic links to the real packages in the system cache.
+As of 1.12, pub also creates a `.packages` file that maps each package
+used by your application to the corresponding package in the cache.
+
+{% include coming-release.html %}
+
+You only have to download a given version of a package once
+and can then reuse it in as many packages as you would like.
+You can delete and regenerate your `packages` directories
+or `.packages` file without having to access the network.
 
 ### Transformer {#transformer}
 
@@ -196,9 +205,8 @@ existing uploader and ask them to add you as another uploader.
 
 A constraint placed on each [dependency](#dependency) of a package that
 specifies which versions of that dependency the package is expected to work
-with. This can be a single version (e.g. `0.3.0`), a range of versions (e.g.
-`">=1.2.1 <2.0.0"`), or `any` (or just empty) to specify that any version is
-allowed.
+with. This can be a single version (`0.3.0`) or a range of versions (`^1.2.1`). 
+While `any` is also allowed, for performance reasons we don't recommend it.
 
 For more information, see
 [Version constraints](dependencies.html#version-constraints).

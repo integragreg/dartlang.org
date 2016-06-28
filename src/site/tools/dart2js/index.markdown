@@ -1,37 +1,50 @@
 ---
 layout: default
 title: "dart2js: The Dart-to-JavaScript Compiler"
+short-title: "dart2js"
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }} 
 
 ---
 Use the _dart2js_ tool to compile Dart code to JavaScript.
-[Dart Editor](/tools/editor/) uses dart2js behind the scenes whenever Dart
-Editor compiles to JavaScript. The [`pub serve`](/tools/pub/cmd/pub-serve.html)
-and [`pub build`](/tools/pub/cmd/pub-build.html) options also use dart2js.
+The [`pub serve`](/tools/pub/cmd/pub-serve.html),
+[`pub run`](/tools/pub/cmd/pub-run.html), and
+[`pub build`](/tools/pub/cmd/pub-build.html) commands use dart2js.
+If you are using dart2js through one of the pub commands, see [Configuring
+the Built-in dart2js Transformer for Pub](/tools/pub/dart2js-transformer.html)
+for information on how to specify dart2js flags in your pubspec file.
 
 The dart2js tool provides hints for improving your Dart code and removing
 unused code. You can get these hints for all kinds of code—even command-line
-apps. Also see [dartanalyzer](/docs/dart-up-and-running/contents/ch04-tools-dart_analyzer.html), which performs a similar analysis but,
-as of 1.0, has a different implementation.
+apps.
+Also see [dartanalyzer](https://github.com/dart-lang/analyzer_cli#dartanalyzer),
+which performs a similar analysis but has a different implementation.
 
 This page tells you how to use dart2js on the command line. It also give tips
 on debugging the JavaScript that dart2js generates.
 
-## Basic usage {#basicusage}
+## Basic usage {#basic-usage}
 
 Here’s an example of compiling a Dart file to JavaScript:
 
-{% prettify lang-sh %}
+{% prettify sh %}
 dart2js --out=test.js test.dart
 {% endprettify %}
 
 This command produces a file that contains the JavaScript equivalent of your
 Dart code. It also produces a source map, which can help you debug the
 JavaScript version of the app more easily.
+
+## Usage in pubspec {#pubspec-usage}
+
+You can also configure dart2js options in the pubspec file.
+For more information, see
+[Configuring the Built-in dart2js Transformer for
+Pub](/tools/pub/dart2js-transformer.html).
 
 ## Options {#options}
 
@@ -52,8 +65,16 @@ Common command-line options for dart2js include:
 
 Some other handy options include:
 
+`--packages=<path>`
+: Specify the path to the package resolution configuration file.
+  For more information, see
+  [Package Resolution Configuration File](https://github.com/lrhn/dep-pkgspec/blob/master/DEP-pkgspec.md).
+  _This option cannot be used with `--package-root`._
+
 `-p <path>` or `--package-root=<path>`
 : Specify where to find "package:" imports.
+  _This option cannot be used with `--packages`._
+
 
 `-D<flag>=<value>`
 : Define an environment variable.
@@ -89,9 +110,23 @@ The following options control the analysis that dart2js performs on Dart code:
 : Like `--analyze-only`, but skip analysis of method bodies and field
   initializers.
 
-`--categories=Server`
-: Use with `--analyze-only` to analyze a command-line app. The default
-  category is `Client`, which tells dart2js to expect a web app.
+`--enable-diagnostic-colors`
+: Add colors to diagnostic messages.  
+
+`--show-package-warnings`
+: Show warnings and hints generated from packages.
+
+`--csp`
+: If true, disables dynamic generation of code in the generated output.
+  This is necessary to satisfy CSP restrictions
+  (see [W3C Content Security Policy](http://www.w3.org/TR/CSP/)).
+  The default is false.
+
+`--dump-info`
+: Generates a file (with the suffix `.info.json`)
+  that contains information about the generated code.
+  You can inspect the generated file with the
+  [Dump Info Visualizer](https://github.com/dart-lang/dump-info-visualizer).
 
 ## Helping dart2js generate better code {#helping-dart2js-generate-efficient-code}
             
@@ -139,14 +174,33 @@ recommend pausing on all exceptions.
 
 To debug in Chrome:
 
-1. Open the Developer Tools window, as described in the [Chrome DevTools documentation](https://developers.google.com/chrome-developer-tools/docs/overview).
+1. Open the Developer Tools window, as described in the
+   [Chrome DevTools documentation](https://developer.chrome.com/devtools/index).
 
-2. Turn on source maps, as described in the video [SourceMaps in Chrome](http://bit.ly/YugIUY).
+2. Turn on source maps, as described in the video
+   [SourceMaps in Chrome](http://bit.ly/YugIUY).
 
-3. Enable debugging, either on all exceptions or only on uncaught exceptions, as described in [Pause on JavaScript exceptions](https://developers.google.com/chrome-developer-tools/docs/scripts-breakpoints#pause-on-exceptions).
+3. Enable debugging, either on all exceptions or only on uncaught exceptions,
+   as described in [Pause on Uncaught
+   Exceptions](https://developer.chrome.com/devtools/docs/javascript-debugging#pause-on-uncaught-exceptions).
 
 4. Reload your application.
             
+### Internet Explorer {#dart2js-debugging-ie}
+
+To debug in Internet Explorer:
+
+1. Update to the latest version of Internet Explorer. (Source-map support
+   was added to IE in April 2014).
+
+2. Load **Developer Tools** (**F12**). For more information, see
+   [Using the F12 developer tools](http://msdn.microsoft.com/library/ie/bg182326(v=vs.85)).
+
+3. Reload the application. The **debugger** tab shows source-mapped files.
+
+4. Exception behavior can be controlled through **Ctrl+Shift+E**;
+   the default is **Break on unhandled exceptions**.
+
 ### Firefox {#dart2js-debugging-firefox}
 
 Firefox doesn’t yet support source maps (see [bug #771597](https://bugzilla.mozilla.org/show_bug.cgi?id=771597)).

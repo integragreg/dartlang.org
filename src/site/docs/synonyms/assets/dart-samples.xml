@@ -119,13 +119,25 @@ printName() {
   <synonym id="syn-final-variables">
     <title>Final variables</title>
     <code language="dart"><![CDATA[
-final name = 'Bob';
+const name = 'Bob';
 
-// you can combine types and final
-final String name = 'Bob';
+// you can combine types and const
+const String name = 'Bob';
 
-// Trying to reassign a final variable raises an error
+// Trying to reassign a const variable raises an error
 name = 'Alice';
+// ERROR: cannot assign value to const variable
+
+// You can use final with attributes
+class Person {
+  final String name;
+  Person(this.name);
+}
+
+var bob = new Person('Bob');
+
+// Trying to reassign a final attribute raises an error
+bob.name = 'Alice';
 // ERROR: cannot assign value to final variable
 ]]></code>
   </synonym>
@@ -376,21 +388,18 @@ if (myNaN.isNaN) {
   <synonym id="syn-value-and-identity-equality">
     <title>Value and identity equality</title>
     <code language="dart"><![CDATA[
-/*
- * In Dart, == will check the following, in order:
- * 1) if either x or y is null, then return identical(x, y)
- * 2) otherwise, return x.==(y)
- */
 
-/*
- * This means:
- * a) use identical(a, b) instead of === (there is no ===)
- * b) when implementing ==() you don't have to worry about
- *    manually checking for null arg
- * c) you can't define your own type that considers itself
- *    equal to null
- * d) null == null
- */
+// In Dart, == will check the following, in order:
+// 1) if either x or y is null, then return identical(x, y)
+// 2) otherwise, return x.==(y)
+
+// This means:
+// a) use identical(a, b) instead of === (there is no ===)
+// b) when implementing ==() you don't have to worry about
+//    manually checking for null arg
+// c) you can't define your own type that considers itself
+//    equal to null
+// d) null == null
 
 // therefore, the following code will work:
 
@@ -412,9 +421,9 @@ class Person {
   String name;
   String ssn;
   Person(this.name, this.ssn);
-  
-  bool operator ==(Person other) {
-    return ssn == other.ssn;
+
+  bool operator ==(Object other) {
+    return other is Person && ssn == other.ssn;
   }
 }
 
@@ -832,9 +841,11 @@ handleOnClick(Event e) {
   // ...
 }
 
-// Or, if the handler does not take an event
-
+// Or, if the handler does not take an event:
 element.onClick.listen((e) => subscribeToService());
+
+// Or, if you need to attach to a dynamically-named event:
+element.on['dynamicName'].listen((e) => print('dynamic'));
 ]]></code>
   </synonym>
   <synonym id="syn-remove-an-event-handler">
@@ -1036,8 +1047,8 @@ rand.nextInt(10);
     <title>Sine and Cosine</title>
     <code language="dart"><![CDATA[
 import 'dart:math' as Math;
-sin(Math.PI/2) // == 1.0
-cos(Math.PI) // == -1.0
+Math.sin(Math.PI/2) // == 1.0
+Math.cos(Math.PI) // == -1.0
 ]]></code>
   </synonym>
   <synonym id="syn-convert-a-string-to-a-number">

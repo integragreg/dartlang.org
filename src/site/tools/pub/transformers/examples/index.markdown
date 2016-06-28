@@ -1,11 +1,13 @@
 ---
 layout: default
-title: "Writing a Pub Transformer: Examples"
+title: "Examples of Transformer Code"
+short-title: "Examples"
 ---
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
-When _pub_ serves or builds an app, it can run one or more
+When _pub_ serves, builds, or runs an app, it can run one or more
 transformers. ([Learn more about pub](/tools/pub/).)
 
 Transformers operate on _assets_, where an asset is a resource,
@@ -14,21 +16,36 @@ be part of a deployed package.
 ([Learn more about assets and transformers](/tools/pub/assets-and-transformers.html).)
 
 The following are examples of custom transformers written using
-the [barback](http://pub.dartlang.org/packages/barback) package.
-See [Writing a Pub Transformer](/tools/pub/transformers/) for more information
-about these examples.
+the [barback](https://pub.dartlang.org/packages/barback) package.
+The description for each example states where you can get more information
+about that particular example.
 
-* [simple_transformer](simple_transformer.zip)
-  inserts a copyright string at the beginning of a ".txt" file.
+[aggregate_transformer](https://github.com/dart-lang/barback/tree/master/example/aggregate_transformer)
+: Combines partial HTML files contained in a "recipes" directory into a
+  single HTML file. See
+  [Writing an Aggregate Transformer](/tools/pub/transformers/aggregate.html)
+  for more information.
 
-* [markdown_converter](markdown_converter.zip)
-  converts a markdown file (with either a ".mdown", ".md", or
+[lazy_transformer](https://github.com/dart-lang/barback/tree/master/example/lazy_transformer)
+: Lazily converts a text file using a ROT13 converter. See
+  [Writing a Lazy Transformer](/tools/pub/transformers/lazy-transformer.html)
+  for more information.
+
+[markdown_converter](https://github.com/dart-lang/barback/tree/master/example/markdown_converter)
+: Converts a markdown file (with either a ".mdown", ".md", or
   a ".markdown" extension) to HTML. The output asset has
-  an ".html" extension.
+  an ".html" extension.  See
+  [Writing a Pub Transformer](/tools/pub/transformers/) for more information.
 
-Once you download and unzip these examples, you can run
-`pub build` to generate the assets, or `pub serve` to serve
-the assets. Sample input assets are
-included under the `web` directory, and the output assets
-(after running `pub build`) are placed under the `build`
-directory.
+[simple_transformer](https://github.com/dart-lang/barback/tree/master/example/simple_transformer)
+: Inserts a copyright string at the beginning of a ".txt" file. See
+  [Writing a Pub Transformer](/tools/pub/transformers/) for more information.
+
+All of these examples are part of the
+[barback](https://github.com/dart-lang/barback) repo on GitHub.
+
+To run an example, first clone or download the barback repo.
+Then under the <code>example/<em>example_name</em></code> directory,
+create an empty `web` directory, and run `pub build` to generate the assets.
+Pub transforms the sample assets (located in `lib`)
+and places them under `build`.

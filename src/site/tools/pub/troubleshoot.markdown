@@ -4,21 +4,21 @@ title: "Troubleshooting Pub"
 description: "Common gotchas you might run into when using Pub."
 ---
 
+{% include breadcrumbs.html %}
+
 # {{ page.title }}
 
-<h4>Contents</h4>
-<ol class="toc">
-<li><a href="#pub-publish-403">Getting a "403" error when publishing
-     a package</a></li>
-<li><a href="#pub-get-fails">Pub build fails with HttpException
-     error</a></li>
-</ol>
+#### Contents
+{:.no_toc}
+
+* ToC
+{:toc}
 
 ### Getting a "403" error when publishing a package {#pub-publish-403}
 
 You receive the following error when running `pub publish`:
 
-{% prettify lang-sh %}
+{% prettify none %}
 HTTP error 403: Forbidden
 ...
 You aren't an uploader for package '<foo>'
@@ -29,7 +29,7 @@ publish a package, but the pub client registers you with another account.
 
 You can reset pub's authentication process by removing the credentials file:
 
-{% prettify lang-sh %}
+{% prettify sh %}
 rm ~/.pub-cache/credentials.json
 {% endprettify %}
 
@@ -38,7 +38,7 @@ rm ~/.pub-cache/credentials.json
 You receive an HttpException error similar to the following when
 running `pub build`:
 
-{% prettify lang-sh %}
+{% prettify none %}
 Pub build failed, [1] IsolateSpawnException: 'HttpException: Connection closed while receiving data,
 ...
 library handler failed
@@ -50,4 +50,36 @@ AVG 2013 Internet security suite. Check the manual for your security
 suite to see how to temporarily
 disable this feature. For example, see
 [Disabling AVG temporarily](http://www.avg.com/ww-en/faq.num-3857).
+
+### Pub get fails from behind a corporate firewall
+
+From the command line, pub honors the `http_proxy` and `https_proxy`
+environment variables.
+You can set the proxy server environment variable as follows.
+
+On Linux/Mac OS X:
+
+{% prettify sh %}
+$ export https_proxy=hostname:port
+{% endprettify %}
+
+On Windows:
+
+{% prettify sh %}
+> set https_proxy=hostname:port
+{% endprettify %}
+
+If the proxy requires credentials, you can set them as follows.
+
+On Linux/Mac OS X:
+
+{% prettify sh %}
+$ export https_proxy=username:password@hostname:port
+{% endprettify %}
+
+On Windows:
+
+{% prettify sh %}
+> set https_proxy=username:password@hostname:port
+{% endprettify %}
 

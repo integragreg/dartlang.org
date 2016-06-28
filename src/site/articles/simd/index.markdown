@@ -1,4 +1,4 @@
---- 
+---
 layout: article
 title: "Using SIMD in Dart"
 description: "Get more out of your CPU: operate on four numbers in parallel, using the Float32x4 class from the dart:typed_data library."
@@ -11,6 +11,7 @@ article:
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -53,7 +54,7 @@ The following video features a skeletal animation demo in which
 the SIMD version of the animation has
 **almost 400%** the performance of the non-SIMD version.
 
-<iframe width="560" height="315" src="//www.youtube.com/embed/huawCRlo9H4?start=2996" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/huawCRlo9H4?start=2996" frameborder="0" allowfullscreen></iframe>
 
 Machine learning algorithms
 (such as automatic speech recognition)
@@ -478,7 +479,7 @@ For more details, check out these resources:
   * [vector_math](https://github.com/johnmccutchan/vector_math),
     a library for 2D and 3D applications
     that relies on Float32x4 and Float32x4List
-* My [SIMD talk](http://www.youtube.com/watch?v=CKh7UOELpPo) and
+* My [SIMD talk](https://www.youtube.com/watch?v=CKh7UOELpPo) and
   [slides](/slides/2013/02/Bringing-SIMD-to-the-Web-via-Dart.pdf)
   from the February 2013
   [SFHTML5 meetup](http://www.meetup.com/sfhtml5/)

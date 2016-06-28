@@ -10,17 +10,18 @@ rel:
     - seth-ladd
 article:
   written_on: 2011-10-01
-  updated_on: 2013-11-11
+  updated_on: 2014-12-01
   collection: libraries-and-apis
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
 <em>Written by Sigmund Cherem, Vijay Menon, and Seth Ladd <br>
 October 2011
-(updated November 2013)</em>
+(updated December 2014)</em>
 
 Dart apps compile to JavaScript to run across modern desktop and mobile
 browsers. Dart apps can also run inside a Dart virtual machine (VM), which can be
@@ -32,9 +33,11 @@ compiled to JavaScript or when run in the Dart VM.
 ## Quick start
 
 1. Compile your Dart app to JavaScript with
-   [dart2js](/docs/dart-up-and-running/contents/ch04-tools-dart2js.html).
-   If your Dart file is `app.dart` then name your JavaScript version `app.dart.js`.
-1. Load your Dart app with a `<script type="application/dart">` tag (only one per HTML page).
+   [dart2js](/tools/dart2js/).
+   If your Dart file is `app.dart` then name your JavaScript version
+   `app.dart.js`.
+1. Load your Dart app with a `<script type="application/dart">` tag
+   (only one per HTML page).
 1. Follow that tag with a &lt;script&gt; tag for the `dart.js` file.
 
 Here is a minimal example, which works in all browsers (even if they don't
@@ -107,7 +110,9 @@ As such, we recommend the following:
 ## The dart.js script
 {:#dartjs-script}
 
-Use the dart.js script to run your app in browsers that don't have a
+Use the dart.js script, part of the
+[browser package](https://pub.dartlang.org/packages/browser),
+to run your app in browsers that don't have a
 Dart VM. The dart.js script allows you to use the same HTML page for
 both Dartium and other browsers.
 
@@ -126,24 +131,20 @@ For example:
 {% endprettify %}
 
 To get a copy of the dart.js file,
-you can use the [pub package manager](http://pub.dartlang.org).
+you can use the [pub package manager](/tools/pub/).
 Here's how:
 
-1. Add the following to your application's pubspec.yaml:
+1. Add the following to your application's pubspec.yaml,
+   replacing the version range with the appropriate version:
 
        dependencies:
-         browser: any
+         browser: ">=0.10.0 <0.11.0"
 
 2. Run `pub get`.
 
 3. Use a relative script tag to point to the installed version:
 
        <script src="packages/browser/dart.js"></script>
-
-If you don't want to use pub,
-you can instead download a copy of
-[dart.js from the Dart project](https://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js).
-Note that the location of the file might change.
 
 ## Fundamental differences from JavaScript
 
@@ -162,11 +163,11 @@ In JavaScript, additional script tags are used to import third party libraries
 (e.g., jQuery).  In Dart, this is not necessary: import is part of the language.
 
 Web components and HTML imports are an important caveat to the one
-script per document rule.  For example, the [Polymer.dart](/polymer-dart)
+script per document rule.  For example, the [polymer.dart](/polymer/)
 framework uses HTML imports to allow developers to include HTML components into a
 Dart application.  Dart scripts in imported HTML documents are
-injected into the main application.  See the Polymer.dart
-[documentation](/polymer-dart) for more details.
+injected into the main application.  See the [polymer.dart
+documentation](/polymer/) for more details.
 
 ### Execution timing
 

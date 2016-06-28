@@ -1,11 +1,13 @@
 ---
 layout: default
 title: "Writing a Pub Transformer"
+description: How to write a Pub transformer that processes a single input asset.
 header:
   css: ["transformers.css"]
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -23,14 +25,22 @@ Before reading further, read
 to familiarize yourself with assets, transformers, and how they
 relate to each other.
 
+You can write different kinds of transformers depending on the
+type of work you need to perform. A basic Pub transformer processes
+a single input asset. If you need to process multiple inputs with no single
+primary input&ndash;you want to combine several images into one image, 
+for example&ndash;you can write an _aggregate_ transformer.
+For more information, see
+[Writing an Aggregate Tranformer](aggregate.html).
+
 This page uses two examples, SimpleTransformer and
-MarkdownConverter, which you can find at
-[Writing a Pub Transformer: Examples](examples/).
+MarkdownConverter, which you can find through
+[Examples of Transformer Code](examples/).
 
 ## Implementing a transformer {#implementing-transformer}
 
 A transformer is a Dart class that extends the Transformer class
-from the [barback](http://pub.dartlang.org/packages/barback) package.
+from the [barback](https://pub.dartlang.org/packages/barback) package.
 Barback, developed by the Dart team and available at pub.dartlang.org,
 provides a system for building assets.
 
@@ -40,12 +50,12 @@ A transformer's code goes into one of the following locations:
 
 * For a package that only implements a transformer, you can put
   the code into `<package>.dart` in the `lib` directory.
+  This is what you want in most situations.
 
 * For a larger project where you want the transformer's code to be in a
   library under `lib/src`, you can put the transformer code into
   `lib/src/` and add the export statement for the library to
-  `lib/<package>.dart`. (This doesn't work in Dart releases
-  before 1.4.)
+  `lib/<package>.dart`.
 
 * If the transformer can't coexist with the main package code,
   you can put the code into a file named `transformer.dart`. For
@@ -72,9 +82,9 @@ import 'package:barback/barback.dart';
 In your package's `pubspec.yaml` file, add a dependency
 on the barback package:
 
-{% prettify lang-sh %}
+{% prettify yaml %}
 dependencies:
-  barback: any
+  barback: ^0.15.2
 {% endprettify %}
 
 ### Extend `Transformer` {#extend-transformer}
@@ -97,6 +107,38 @@ to be publicly available as a loadable transformer plugin.
 MyTransformer.asPlugin();
 {% endprettify %}
 
+You can also define a single-argument `asPlugin(BarbackSettings)` constructor
+that you can use to pass information to the transformer.
+
+For example, say you want a transformer to execute when your app is deployed,
+but not during the development process, when you are debugging.
+You can achieve this by using the `mode` option.
+The `mode` value defaults to "debug" for `pub serve` and "release"
+for `pub build`, but the value can be configured to use any string
+for either command.
+
+The following code shows how this might look:
+
+{% prettify dart %}
+class InsertCopyright extends Transformer {
+  final BarbackSettings _settings;
+
+  InsertCopyright.asPlugin(this._settings);
+
+  Future apply(Transform transform) {
+    // Skip the transform in debug mode.
+    if (_settings.mode.name == 'debug') return;
+
+    // Apply the transform.
+    // ...
+  }
+}
+{% endprettify %}
+
+For more information on the mode option, see 
+[pub serve](/tools/pub/cmd/pub-serve.html#options) and
+[pub build](/tools/pub/cmd/pub-build.html#options).
+
 ### Claim input assets {#claim-input-assets}
 
 A transformer can limit which assets that it processes. It can
@@ -104,7 +146,7 @@ do this in one of two ways:
 
 * Implement `allowedExtensions` to return a
   space-separated list of file extensions. The following
-  code, from [MarkdownConverter](examples/MarkdownConverter.zip),
+  code, from [markdown_converter](examples/),
   limits input assets to those
   files with one of three Markdown file extensions:
 
@@ -120,13 +162,18 @@ String get allowedExtensions => ".md .markdown .mdown";
 
 <div class="step-details" markdown="1">
 {% prettify dart %}
-Future<bool> isPrimary(Asset input) {
-  return input.path.startswith("sources/");
+Future<bool> isPrimary(AssetId id) {
+  return new Future.value(id.path.startsWith('sources/');
 }
 {% endprettify %}
 </div>
 
-If you don't override either `allowedExtensions()` or `isPrimary()`,
+Note that defining `allowedExtensions` is shorthand for defining an
+`isPrimary` method that only checks the extension of the asset ID's path.
+If you need to perform any other checks, you must explicitly define
+`isPrimary()`.
+
+If you don't override either `allowedExtensions` or `isPrimary()`,
 then the transformer gets the opportunity to process all assets.
 
 ### Process input assets {#process-input-assets}
@@ -164,12 +211,11 @@ copyright string at the beginning of the input asset:
 String copyright =
   "Copyright (c) 2014, the Example project authors.\n";
 
-Future apply(Transform transform) {
-  return transform.primaryInput.readAsString().then((content) {
-    var id = transform.primaryInput.id;
-    String newContent = copyright + content;
-    transform.addOutput(new Asset.fromString(id, newContent));
-  });
+Future apply(Transform transform) async {
+  var content = await transform.primaryInput.readAsString();
+  var id = transform.primaryInput.id;
+  var newContent = copyright + content;
+  transform.addOutput(new Asset.fromString(id, newContent));
 }
 {% endprettify %}
 
@@ -228,7 +274,7 @@ list it in your pubspec.
 If your transformer is implemented in `lib/<package>.dart` or
 `lib/transformer.dart`, add the following to your pubspec:
 
-{% prettify lang-sh %}
+{% prettify yaml %}
 transformers:
 - <pkgname>
 {% endprettify %}
@@ -237,7 +283,7 @@ SimpleTransformer's package name (as specified in the pubspec)
 is `simple_transformer`, so here's the pubspec entry that
 specifies running SimpleTransformer's transformer:
 
-{% prettify lang-sh %}
+{% prettify yaml %}
 transformers:
 - simple_transformer
 {% endprettify %}
@@ -247,7 +293,7 @@ If you put your transformer class into a file other than
 `lib/stuff/insert_copyright.dart`&mdash;you add it to the
 pubspec file like this:
 
-{% prettify lang-sh %}
+{% prettify yaml %}
 transformers:
 - simple_transformer/stuff/insert_copyright
 {% endprettify %}
@@ -269,17 +315,22 @@ and
 [How to refer to assets](/tools/pub/assets-and-transformers.html#how-to-refer-to-assets)
 for specifics.
 
-The `pub build` and `pub serve` commands automatically run transformers.
-For more information, see
+The `pub build`, `pub serve`, and `pub run` commands automatically run
+transformers. For more information, see
 [How transformers work](/tools/pub/assets-and-transformers.html#how-transformers-work).
 
 ## More information {#more-info}
 
-* [Writing a Pub Transformer: Examples](examples/)
+* [Writing an Aggregate Transformer](aggregate.html)
+: How to write a transformer that combines multiple input assets
+  into a single output.
+* [Writing a Lazy Transformer](lazy-transformer.html)
+: How to write a transformer that processes lazily, in the background.
+* [Examples of Transformer Code](examples/)
 : Examples to get you started.
-* [barback library](https://api.dartlang.org/apidocs/channels/stable/#barback/barback)
+* [barback library](https://api.dartlang.org/apidocs/channels/stable/dartdoc-viewer/barback)
 : API docs for the barback package.
 * [Barback - Can We Build It? Yes, We Can!](https://docs.google.com/a/google.com/document/d/1juHkCRg-1YH6LvwhGPHgF2ihX-UQtR1fv-8aknO7t_4/edit?pli=1#)
 : A description of the barback asset system, written by a
-member of the Dart engineering team. 
+  member of the Dart engineering team. 
 

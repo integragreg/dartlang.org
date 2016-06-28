@@ -1,29 +1,45 @@
 CURRENT_BRANCH=$(shell git branch --no-color | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+LAST_COMMIT=$(shell git log -n 1 --pretty=format:"%H")
 PWD=$(shell pwd)
+LOCAL=http://localhost:8081/
 XDGOPEN=$(shell type xdg-open 2>/dev/null)
+ifeq ($(XDGOPEN),)
+OPEN=open $(LOCAL)
+else
+OPEN=xdg-open $(LOCAL)
+endif
 
 clean:
 	rm -rf ./build
 
-build: copy add_version
+build: copy remove_node_modules add_version add_release
+
+pubget:
+	find . -name pubspec.yaml -exec bash -c ' cd $$(dirname {});pwd;pub get' \;
+
+build_apps:
+	cd ./src/site/tools/download-archive && pub get && pub build -o out
 
 copy: clean
-	cd ./src/site && jekyll build && cd ../.. && cp -R ./src/appengine/* build/
+	cd ./src/site && bundle exec jekyll build && cd ../.. && cp -R ./src/appengine/* build/
+
+remove_node_modules: copy
+	rm -rf build/static/events/2015/summit/node_modules
 
 add_version:
 	ruby -p -i -e '$$_.gsub!(/CHANGEME/, "$(CURRENT_BRANCH)")' ./build/app.yaml
 
+add_release:
+	ruby -p -i -e '$$_.gsub!(/CURRENT_BRANCH/, "$(CURRENT_BRANCH)")' ./build/static/release.txt
+	ruby -p -i -e '$$_.gsub!(/LAST_COMMIT/, "$(LAST_COMMIT)")' ./build/static/release.txt
+
 deploy: build
 	cd ./build && appcfg.py --oauth2 update .
-	@echo "Visit http://$(CURRENT_BRANCH).dart-lang.appspot.com"
+	@echo "Visit https://$(CURRENT_BRANCH)-dot-dart-lang.appspot.com"
 
 server:
-ifeq ($(XDGOPEN),)
-	@open "http://localhost:8081/" &
-else
-	@xdg-open "http://localhost:8081/" &
-endif
-	cd ./src/site && jekyll serve -w --port=8081 --trace
+	ruby -e 'sleep 3; 1.upto(30) { break if system("curl -I -s $(LOCAL)"); print "."; sleep 1 }; exec "$(OPEN)"' &
+	cd ./src/site && bundle exec jekyll serve -w --port=8081 --trace
 
 optimize:
 	@find . -iname *.png | xargs -L 1 optipng -o7
@@ -67,3 +83,9 @@ compile-sample-apps: observables-samples
 
 observables-samples:
 	cd src/site/web-ui/observables/code && pub get && dart build.dart
+
+sanity-test:
+	bundle exec ruby src/tests/site/sanity.rb
+
+sanity-test-live:
+	bundle exec ruby src/tests/site/sanity.rb https://www.dartlang.org/

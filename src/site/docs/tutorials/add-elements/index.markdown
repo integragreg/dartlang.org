@@ -21,19 +21,10 @@ prev-title: "Connect Dart & HTML"
 
 {% endcapture %}
 
-{% capture sample_links %}
-
-<p> This tutorial features these examples:</p>
-* todo
-* anagram
-
-<p>
-Don't have the source code?
-<a href="https://github.com/dart-lang/dart-tutorials-samples/archive/master.zip">
-  Download it.
-</a>
-
-{% endcapture %}
+{% comment %}
+NOTE: No sample_links section goes here because all the samples are in embedded
+DartPads.
+{% endcomment %}
 
 {% capture content %}
 
@@ -67,7 +58,7 @@ Because the nodes you care about most are usually elements,
 this tutorial focuses on Element,
 rather than on Node.
 
-* [Copy and run the todo app](#copy-app)
+* [Running the Todo app](#try-app)
 * [About parent and child Elements in Dart](#tree-structure)
 * [Setting up the page in HTML](#html-code)
 * [Getting an element from the DOM](#dart-code)
@@ -79,7 +70,7 @@ rather than on Node.
 * [Other resources](#other-resources)
 * [What next?](#what-next)
 
-##Copy and run the todo app {#copy-app}
+##Running the Todo app {#try-app}
 
 In this tutorial, you will be working with a sample web app
 that is a partial implementation of a todo list.
@@ -87,13 +78,46 @@ This program dynamically changes the DOM,
 and therefore the web page,
 by adding elements to the DOM tree.
 
-**Try it!** Type in the text field and press return.
+**Try it!**
+Click run ( <img src="/imgs/run.png" /> ) to start the web app.
+Then type in the app's text field, and press return.
 The app adds an item to the list.
-Enter a few items into the input field:
+Enter a few items into the input field.
 
-<iframe class="running-app-frame"
-        style="height:250px;width:300px;"
-        src="examples/todo/todo.html">
+{% comment %}
+https://gist.github.com/Sfshaza/65c90ff6b078c332d4b6
+
+main.dart:
+// Copyright (c) 2012, the Dart project authors.
+// Please see the AUTHORS file for details. 
+// All rights reserved. Use of this source code
+// is governed by a BSD-style license that can be
+// found in the LICENSE file.
+ 
+import 'dart:html';
+ 
+InputElement toDoInput;
+UListElement toDoList;
+ 
+void main() {
+  toDoInput = querySelector('#to-do-input');
+  toDoList = querySelector('#to-do-list');
+  toDoInput.onChange.listen(addToDoItem);
+}
+ 
+void addToDoItem(Event e) {
+  var newToDo = new LIElement();
+  newToDo.text = toDoInput.value;
+  toDoInput.value = '';
+  toDoList.children.add(newToDo);
+}
+{% endcomment %}
+
+<iframe
+src="{{site.custom.dartpad.embed-html-prefix}}?id=65c90ff6b078c332d4b6&horizontalRatio=60&verticalRatio=80"
+    width="100%"
+    height="500px"
+    style="border: 1px solid #ccc;">
 </iframe>
 
 This is the beginning of an app to manage a list of things to do.
@@ -334,12 +358,101 @@ each item in the to do list.
 
 ##Moving elements within the DOM tree {#moving-elements}
 
-Here's an example that shows how to move an element within the DOM.
-**Try it!** Form a word by clicking the letter tiles.
+The Anagram app shows how to move an element within the DOM.
 
-<iframe class="running-app-frame"
-        style="height:400px;width:400px;"
-        src="examples/anagram/anagram.html">
+**Try it!**
+Click run ( <img src="/imgs/run.png" /> ) to start the web app.
+Then form a word by clicking the app's letter tiles.
+You might prefer to 
+<a href="{{site.custom.dartpad.direct-link}}/0532bfcb70bf5e4a900c" target="_blank">open
+the app in DartPad</a> 
+to have more space for the app's code and UI.
+
+{% comment %}
+https://gist.github.com/Sfshaza/0532bfcb70bf5e4a900c
+
+main.dart:
+// Copyright (c) 2012, the Dart project authors.  Please see the
+// AUTHORS file for details. All rights reserved. Use of this
+// source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import 'dart:html';
+import 'dart:math';
+
+// Should remove tiles from here when they are selected otherwise
+// the ratio is off.
+
+String scrabbleLetters = 'aaaaaaaaabbccddddeeeeeeeeeeeeffggghhiiiiiiiiijkllllmmnnnnnnooooooooppqrrrrrrssssttttttuuuuvvwwxyyz**';
+
+List<ButtonElement> buttons = new List();
+Element letterpile;
+Element result;
+ButtonElement clearButton;
+Element value;
+int wordvalue = 0;
+
+Map scrabbleValues = { 'a':1, 'e':1, 'i':1, 'l':1, 'n':1,
+                       'o':1, 'r':1, 's':1, 't':1, 'u':1,
+                       'd':2, 'g':2, 'b':3, 'c':3, 'm':3,
+                       'p':3, 'f':4, 'h':4, 'v':4, 'w':4,
+                       'y':4, 'k':5, 'j':8, 'x':8, 'q':10,
+                       'z':10, '*':0 };
+
+void main() {
+  letterpile = querySelector("#letterpile");
+  result = querySelector("#result");
+  value = querySelector("#value");
+
+  clearButton = querySelector("#clearButton");
+  clearButton.onClick.listen(newletters);
+
+  generateNewLetters();
+}
+
+void moveLetter(Event e) {
+  Element letter = e.target;
+  if (letter.parent == letterpile) {
+    result.children.add(letter);
+    wordvalue += scrabbleValues[letter.text];
+    value.text = "$wordvalue";
+  } else {
+    letterpile.children.add(letter);
+    wordvalue -= scrabbleValues[letter.text];
+    value.text = "$wordvalue";
+  }
+}
+
+void newletters(Event e) {
+  letterpile.children.clear();
+  result.children.clear();
+  generateNewLetters();
+}
+
+generateNewLetters() {
+  Random indexGenerator = new Random();
+  wordvalue = 0;
+  value.text = '';
+  buttons.clear();
+  for (var i = 0; i < 7; i++) {
+    int letterIndex =
+        indexGenerator.nextInt(scrabbleLetters.length);
+    // Should remove the letter from scrabbleLetters to keep the
+    // ratio correct.
+    buttons.add(new ButtonElement());
+    buttons[i].classes.add("letter");
+    buttons[i].onClick.listen(moveLetter);
+    buttons[i].text = scrabbleLetters[letterIndex];
+    letterpile.children.add(buttons[i]);
+  }
+}
+{% endcomment %}
+
+<iframe
+src="{{site.custom.dartpad.embed-html-prefix}}?id=0532bfcb70bf5e4a900c&horizontalRatio=70&verticalRatio=80"
+    width="100%"
+    height="600px">
+    style="border: 1px solid #ccc;">
 </iframe>
 
 When the program starts,

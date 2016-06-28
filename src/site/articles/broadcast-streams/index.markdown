@@ -11,6 +11,7 @@ article:
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -24,7 +25,7 @@ and provides recommendations on when to use which.
 
 If you aren't already familiar with Dart streams,
 you can learn the basics from the tutorial
-[Use Streams for Data](/docs/tutorials/streams/).
+[Asynchronous Programming: Streams](/docs/tutorials/streams/).
 
 ## Introduction
 

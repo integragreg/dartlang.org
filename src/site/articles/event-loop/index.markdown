@@ -12,6 +12,7 @@ article:
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -127,7 +128,7 @@ from within Dart code,
 but we expect the web implementation to plug into
 the browser microtask queue.
 (For the latest status, see
-[dartbug.com/13433](https://code.google.com/p/dart/issues/detail?id=13433).)
+[dartbug.com/13433](https://github.com/dart-lang/sdk/issues/13433).)
 
 As the following figure shows,
 when main() exits,
@@ -225,7 +226,7 @@ The **scheduleMicrotask()** function used to be named **runAsync()**.
 
 Examples of using these APIs are in the next section under
 [Event queue: new Future()](#event-queue-new-future) and
-[Microtask queue: scheduleMicrotask()](#microtask-queue).
+[Microtask queue: scheduleMicrotask()](#microtask-queue-schedulemicrotask).
 
 ### Use the appropriate queue (usually: the event queue)
 
@@ -343,8 +344,8 @@ scheduleMicrotask(() {
 });
 {% endprettify %}
 
-Due to bugs [9001](https://code.google.com/p/dart/issues/detail?id=9001)
-and [9002](https://code.google.com/p/dart/issues/detail?id=9002),
+Due to bugs [9001](https://github.com/dart-lang/sdk/issues/9001)
+and [9002](https://github.com/dart-lang/sdk/issues/9002),
 the first call to scheduleMicrotask() schedules a task on the event queue;
 this task creates the microtask queue and
 enqueues the function specified to scheduleMicrotask().
@@ -432,7 +433,7 @@ main() {
 
 The answer:
 
-<pre>
+{% prettify none %}
 main #1 of 2
 main #2 of 2
 microtask #1 of 2
@@ -440,7 +441,7 @@ microtask #2 of 2
 future #2 of 3
 future #3 of 3
 future #1 (delayed)
-</pre>
+{% endprettify %}
 
 That order should be what you expected,
 since the example’s code executes in three batches:
@@ -462,7 +463,7 @@ new Future()—execute at a later time.
 Currently, if you comment out the first call to scheduleMicrotask(),
 then the callbacks for futures #2 and #3 execute before microtask #2.
 This is due to bugs 9001 and 9002, as discussed in
-[Microtask queue: scheduleMicrotask()](#microtask-queue).
+[Microtask queue: scheduleMicrotask()](#microtask-queue-schedulemicrotask).
 </aside>
 
 ### Question #2
@@ -503,7 +504,7 @@ main() {
 
 The output, assuming bugs 9001/9002 aren't fixed:
 
-<pre>
+{% prettify none %}
 main #1 of 2
 main #2 of 2
 microtask #1 of 3
@@ -519,7 +520,7 @@ microtask #0 (from future #2b)
 future #3a (a new future)
 future #3b
 future #1 (delayed)
-</pre>
+{% endprettify %}
 
 <aside class="alert alert-info" markdown="1">
 **Note:**
@@ -611,5 +612,5 @@ As you write asynchronous code, you might find these resources helpful:
 
 * [Using Future Based APIs](/articles/using-future-based-apis/)
 * [Futures and Error Handling](/articles/futures-and-error-handling/)
-* [dart:async - Asynchronous Programming](/docs/dart-up-and-running/contents/ch03.html#ch03-asynchronous-programming) section of the library tour
+* [dart:async - Asynchronous Programming](/docs/dart-up-and-running/ch03.html#dartasync---asynchronous-programming) section of the library tour
 * [dart:async API reference](http://api.dartlang.org/dart_async.html)

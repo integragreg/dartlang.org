@@ -1,14 +1,17 @@
 ---
 layout: default
 title: "pub build"
+description: "Use pub build to deploy your Dart application."
 ---
+
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
 _Build_ is one of the commands of the _pub_ tool.
 [Learn more about pub](/tools/pub/).
 
-{% prettify lang-sh %}
+{% prettify sh %}
 $ pub build [--mode=<mode>] [<directories>] [--output=<directory>]
 $ pub build [--mode=<mode>] [--all] [--output=<directory>]
 {% endprettify %}
@@ -20,7 +23,7 @@ new directory named `build`.
 
 To use `pub build`, just run it in your package's root directory. For example:
 
-{% prettify lang-sh %}
+{% prettify sh %}
 $ cd ~/dart/helloworld
 $ pub build
 Building helloworld......
@@ -78,9 +81,9 @@ Directories you might typically specify include the following:
 
 For example, you might specify:
 
-<pre>
+{% prettify sh %}
 pub build test benchmark example/foo bar
-</pre>
+{% endprettify %}
 
 In the preceding example, the <code>test</code>, <code>benchmark</code>,
 <code>example/foo</code>, and <code>bar</code> directories are processed,
@@ -107,9 +110,7 @@ If omitted, it defaults to "release".</dd>
 <dt><code>--output=&lt;directory&gt;</code> or
     <code>-o &lt;directory&gt;</code></dt>
 <dd>Optional. Specifies where to put the build output. The default is the
-top-level <code>build</code> directory. (This option will be available in
-the Dart 1.4 stable channel, and is now available in the bleeding edge
-channel.)</dd>
+top-level <code>build</code> directory.</dd>
 
 </dl>
 

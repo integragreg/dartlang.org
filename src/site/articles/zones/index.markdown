@@ -13,6 +13,7 @@ header:
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 <p class="subtitle">Asynchronous dynamic extents</p>
@@ -76,7 +77,7 @@ Java’s _thread-local storage_
 also has some similarities.
 Closest of all is Brian Ford's JavaScript port of Dart zones,
 [zone.js](https://github.com/btford/zone.js/), which he describes in
-[this video](http://www.youtube.com/watch?v=3IqtmUscE_U).
+[this video](https://www.youtube.com/watch?v=3IqtmUscE_U).
 
 
 ## Zone basics
@@ -343,16 +344,10 @@ runZoned(() {
 
 To read zone-local values, use the zone’s index operator and the value's key:
 <code>[<em>key</em>]</code>.
-Each key must be a
-[Symbol](https://api.dartlang.org/apidocs/channels/stable/#dart-core.Symbol).
+Any object can be used as a key, as long as it has compatible
+`operator ==` and `hashCode` implementations.
 Typically, a key is a symbol literal:
 <code>#<em>identifier</em></code>.
-
-<aside class="alert alert-info" markdown="1">
-  **API note:**
-  Once [revision 34248](https://code.google.com/p/dart/source/detail?r=34248)
-  is in a release, keys won't be limited to symbols.
-</aside>
 
 You can't change the object that a key maps to,
 but you can manipulate the object.
@@ -477,7 +472,7 @@ main() {
     print('Will be ignored');
   }, zoneSpecification: new ZoneSpecification(
     print: (self, parent, zone, message) {
-      /* Ignore message. */
+      // Ignore message.
     }));
 }
 {% endprettify %}
@@ -580,7 +575,7 @@ lets you specify the code that the zone executes.
   In the future, zones might provide a simpler alternative
   for the common case of sandwiching zone code:
   an onEnter/onLeave API.
-  See [issue 17532](https://code.google.com/p/dart/issues/detail?id=17532)
+  See [issue 17532](https://github.com/dart-lang/sdk/issues/17532)
   for details.
 </aside> 
 
@@ -763,7 +758,7 @@ stack_trace
 : With the stack_trace library's
   [Chain class](https://api.dartlang.org/apidocs/channels/stable/#stack_trace/stack_trace.Chain)
   you can get better stack traces for asynchronously executed code.
-  See the [stack_trace package](http://pub.dartlang.org/packages/stack_trace)
+  See the [stack_trace package](https://pub.dartlang.org/packages/stack_trace)
   at pub.dartlang.org for more information.
 
 
@@ -779,18 +774,20 @@ The task_interceptor example
   without yielding to the event loop.
 
 The source code for the stack_trace package
-: The [stack_trace package](http://pub.dartlang.org/packages/stack_trace)
+: The [stack_trace package](https://pub.dartlang.org/packages/stack_trace)
   uses zones to form chains of stack traces
   for debugging asynchronous code.
   Zone features used include error handling, zone-local values, and callbacks.
-  You can find the stack_trace source code in the Dart project under
-  [pkg/stack_trace/lib/src](https://code.google.com/p/dart/source/browse/branches/bleeding_edge/dart/pkg/stack_trace/lib/#lib%2Fsrc).
+  You can find the stack_trace source code in the
+  [stack_trace GitHub project](https://github.com/dart-lang/stack_trace).
 
 The source code for dart:html and dart:async
 : These two SDK libraries implement APIs featuring asynchronous callbacks,
   and thus they deal with zones.
-  You can browse or download their source code using the
-  [Source tab of the Dart project](https://code.google.com/p/dart/wiki/GettingTheSource?tm=4).
+  You can browse or download their source code under the
+  [sdk/lib directory](https://github.com/dart-lang/sdk/tree/master/sdk/lib)
+  of the
+  [Dart GitHub project](https://github.com/dart-lang/sdk).
 
 
 _Thanks to Anders Johnsen and Lasse Reichstein Nielsen

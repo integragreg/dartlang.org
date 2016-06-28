@@ -5,13 +5,15 @@ description: "Your development tools generate a bunch of files. Not all of them 
 has-permalinks: true
 ---
 
+{% include breadcrumbs.html %}
+
 # {{ page.title }}
 
 When you put Dart source code in a repository,
-whether using [pub](/tools/pub) or [github](https://github.com/)
-or some other mechanism,
+whether using the [pub](/tools/pub) tool, [GitHub](https://github.com/)
+or another source code management system,
 you shouldn't include most of the files
-that Dart Editor, pub, and other tools create.
+that your IDE or code editor, the pub tool, and other tools generate.
 
 <aside class="alert alert-info" markdown="1">
 **Note:**
@@ -23,7 +25,7 @@ are useful or essential when you deploy an app.
 
 1. [The rules](#the-rules)
 1. [Details](#details)
-   1. [packages/](#packages)
+   1. [.packages and packages/](#packages)
    1. [pubspec.lock](#pubspeclock)
    1. [*.dart.js and *.js.map](#dartjs)
 {:.toc}
@@ -31,30 +33,44 @@ are useful or essential when you deploy an app.
 ## The rules
 
 **Don't commit** the following files and directories
-created by pub, Dart Editor, and dart2js:
+created by pub and dart2js:
 
-    packages/
-    pubspec.lock  // Except for application packages
-    .project
-    .buildlog
-    *.js_
-    *.js.deps
-    *.js.map
+{% prettify none %}
+build/
+packages/
+pubspec.lock  // Except for application packages
+.buildlog
+.packages
+.project
+.pub/
+{% endprettify %}
+
+**Don't commit** the API documentation directory created by dartdoc:
+
+{% prettify none %}
+doc/api/
+{% endprettify %}
 
 **Don't commit** files and directories
 dropped by other development environments.
 For example:
 
-    .project      // Eclipse
-    *.iml         // IntelliJ
-    *.ipr         // IntelliJ
-    *.iws         // IntelliJ
-    .idea/        // IntelliJ
-    .DS_Store     // Mac
+{% prettify none %}
+*.iml         // IntelliJ
+*.ipr         // IntelliJ
+*.iws         // IntelliJ
+.idea/        // IntelliJ
+.DS_Store     // Mac
+{% endprettify %}
 
 **Avoid committing** generated JavaScript files:
 
-    *.dart.js
+{% prettify none %}
+*.dart.js
+*.js_
+*.js.deps
+*.js.map
+{% endprettify %}
 
 For more details, read on.
 
@@ -72,13 +88,14 @@ the common practice is not to commit generated files, at all.
 See [Ignoring files](https://help.github.com/articles/ignoring-files)
 in the GitHub help for more information.
 
-### packages/
+### .packages and packages/ {#packages}
 
-The `packages/` directory
-contains symlinks specific to your machine.
-Users of your code should generate their own packages directory,
+The `.packages` file contains a list of dependencies used by your application.
+Directories named `packages/` contain symlinks specific to your machine.
+Users of your code should generate their own packages information
 using [pub get](/tools/pub/get-started.html#installing-packages).
 
+{% include coming-release.html %}
 
 ### pubspec.lock
 

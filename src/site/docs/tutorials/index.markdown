@@ -38,9 +38,8 @@ from left to right...or choose just the ones you need.
     <li class="active"><a href="#basics" data-toggle="tab">Get started</a></li>
     <li><a href="#dom" data-toggle="tab">Browser</a></li>
     <li><a href="#packages" data-toggle="tab">Packages</a></li>
-    <li><a href="#polymer" data-toggle="tab">Polymer</a></li>
     <li><a href="#futures" data-toggle="tab">Async</a></li>
-    <li><a href="#forms" data-toggle="tab">Forms & data</a></li>
+    <li><a href="#forms" data-toggle="tab">Data</a></li>
     <li><a href="#commandline" data-toggle="tab">Servers</a></li>
     <!--<li><a href="#mobile" data-toggle="tab">Mobile</a></li>-->
   </ul>
@@ -64,33 +63,8 @@ from left to right...or choose just the ones you need.
           <h4 class="no-permalink"><a href="get-started/"><img src="images/target.png" height="20" width="20">&nbsp;Get started</a></h4>
             <p>Get Dart. Run two apps.
             </p>
-          <img src="images/clickme-screenshot.png" width="300">
-          </section>
-        </div>
-        <div class="col-md-6">
-          <section>
-            <h4 class="no-permalink">Get the sample code</h4>
-            Before moving on,
-            get the code for all the tutorials' samples.
-            <ol>
-              <li><a href="https://github.com/dart-lang/dart-tutorials-samples/archive/master.zip">
-                    Download the ZIP file.
-                  </a>
-              </li>
-              <li>
-                Unzip it.
-              </li>
-              <li>
-                Open the dart-tutorials-samples directory in Dart Editor.
-              </li>
-              <li>
-                Go to the next tutorial,
-                <a href="/docs/tutorials/connect-dart-html">
-                  Connect Dart & HTML
-                </a>.
-              </li>
-            </ol>
-            </a>
+          <img style="border:1px solid black" src="images/simple.png"
+               width="300">
           </section>
         </div>
 
@@ -117,7 +91,8 @@ from left to right...or choose just the ones you need.
           <h4 class="no-permalink"><a href="connect-dart-html/"><img src="images/target.png" height="20" width="20">&nbsp;Connect Dart &amp; HTML</a></h4>
             <p>Include a Dart script in an HTML page.
             </p>
-          <img src="images/miniapp-screenshot.png" width="300">
+          <img style="border:1px solid black"
+               src="images/miniapp-screenshot.png" width="300">
           </section>
         </div>
 
@@ -126,7 +101,8 @@ from left to right...or choose just the ones you need.
           <section>
           <h4 class="no-permalink"><a href="add-elements/"><img src="images/target.png" height="20" width="20">&nbsp;Add Elements to the DOM</a></h4>
           <p>Add elements to the web page and move them.</p>
-          <img src="images/todo-screenshot.png" width="300">
+          <img style="border:1px solid black"
+               src="images/todo-screenshot.png" width="300">
           </section>
         </div>
 
@@ -139,7 +115,8 @@ from left to right...or choose just the ones you need.
           <section>
           <h4 class="no-permalink"><a href="remove-elements/"><img src="images/target.png" height="20" width="20">&nbsp;Remove DOM Elements</a></h4>
           <p>Delete elements from the web page.</p>
-          <img src="images/todo-with-delete-screenshot.png" width="300">
+          <img style="border:1px solid black"
+               src="images/todo-with-delete-screenshot.png" width="300">
           </section>
         </div>
         <div class="col-md-6">
@@ -162,8 +139,9 @@ from left to right...or choose just the ones you need.
         <div class="col-md-6">
           <section>
           <h4 class="no-permalink"><a href="shared-pkgs/"><img src="images/target.png" height="20" width="20">&nbsp;Install Shared Packages</a></h4>
-          <p>Organize and share code at <a href="http://pub.dartlang.org/">pub.dartlang.org</a>.</p>
-          <img src="images/add-packages-screenshot.png" width="300">
+          <p>Organize and share code at <a href="https://pub.dartlang.org/">pub.dartlang.org</a>.</p>
+          <img style="border:1px solid black"
+               src="images/pub-dartlang-screenshot.png" width="300">
           </section>
         </div>
         <div class="col-md-6">
@@ -171,30 +149,6 @@ from left to right...or choose just the ones you need.
         </div>
       </div>
     </div> <!-- end Packages tab -->
-
-  <!-- POLYMER TAB -->
-    <div class="tab-pane" id="polymer">
-
-      <div class="intro-para">
-        Polymer helps you build structured, encapsulated,
-        client-side web apps with web components.
-      </div>
-
-      <div class="row">
-
-        <div class="col-md-6">
-          <section>
-          <h4 class="no-permalink"><a href="polymer-intro/"><img src="images/target.png" height="20" width="20">&nbsp;Define a Custom Element</a></h4>
-          <p>Create a custom HTML element using Polymer.</p>
-          <img src="images/stopwatch-screenshot.png" width="200">
-          </section>
-        </div>
-
-        <div class="col-md-6">
-        </div>
-
-      </div>
-    </div>
 
   <!-- FUTURES & STREAMS TAB -->
     <div class="tab-pane" id="futures">
@@ -210,14 +164,14 @@ from left to right...or choose just the ones you need.
 
         <div class="col-md-6">
           <section>
-          <h4 class="no-permalink"><a href="futures/"><img src="images/target.png" height="20" width="20">&nbsp;Use Future-Based APIs</a></h4>
+          <h4 class="no-permalink"><a href="futures/"><img src="images/target.png" height="20" width="20">&nbsp;Asynchronous Programming: Futures</a></h4>
           <p>A first look at using Futures for asynchronous tasks.</p>
-          <img src="futures/images/futurescode.png" width="350">
+          <img src="images/futures-code.png">
           </section>
         </div>
           <section>
-          <h4 class="no-permalink"><a href="streams/"><img src="images/target.png" height="20" width="20">&nbsp;Use Streams for Data</a></h4>
-          <p>Use streams to manage sequences of data</p>
+          <h4 class="no-permalink"><a href="streams/"><img src="images/target.png" height="20" width="20">&nbsp;Asynchronous Programming: Streams</a></h4>
+          <p>Use streams to manage sequences of data.</p>
           <img src="images/streams-code.png">
           </section>
         <div class="col-md-6">
@@ -232,9 +186,7 @@ from left to right...or choose just the ones you need.
       <div class="intro-para">
         Various classes in the Dart libraries help you get, send, receive,
         and save user data.
-        You can use input elements within forms to get data from users.
         You can use JSON to format data and HttpRequest to send requests and receive responses.
-        And, finally, you can save data on the client with IndexedDB.
       </div>
 
       <div class="row">
@@ -244,29 +196,12 @@ from left to right...or choose just the ones you need.
           <section>
           <h4 class="no-permalink"><a href="fetchdata/"><img src="images/target.png" height="20" width="20">&nbsp;Fetch Data Dynamically</a></h4>
           <p>Load data from a static file or from a server.</p>
-          <img src="images/allaboutyou-screenshot.png" width="300">
+          <img style="border:1px solid black"
+               src="images/allaboutyou-screenshot.png" width="300">
           </section>
         </div>
 
         <!-- Forms -->
-        <div class="col-md-6">
-          <section>
-          <h4 class="no-permalink"><a href="forms/"><img src="images/target.png" height="20" width="20">&nbsp;Get Input from a Form</a></h4>
-          <p>Use forms and input elements to get data.</p>
-          <img src="images/slambook-screenshot.png" width="300">
-          </section>
-        </div>
-      </div> <!-- end row -->
-
-      <div class="row">
-        <!-- IndexedDB -->
-        <div class="col-md-6">
-          <section>
-          <h4 class="no-permalink"><a href="indexeddb/"><img src="images/target.png" height="20" width="20">&nbsp;Use IndexedDB</a></h4>
-          <p>Save data on the client with IndexedDB.</p>
-          <img src="images/countdown-screenshot.png" width="300">
-          </section>
-        </div>
         <div class="col-md-6">
         </div>
       </div> <!-- end row -->
@@ -286,7 +221,7 @@ from left to right...or choose just the ones you need.
           <section>
           <h4 class="no-permalink"><a href="cmdline/"><img src="images/target.png" height="20" width="20">&nbsp;Write Command-line Apps</a></h4>
           <p>Learn about features that command-line apps need.</p>
-          <img src="cmdline/images/sourceforhomepage.png">
+          <img src="images/cmdline-code.png" width="100%">
           </section>
         </div>
 
@@ -294,7 +229,7 @@ from left to right...or choose just the ones you need.
           <section>
           <h4 class="no-permalink"><a href="/docs/tutorials/httpserver/"><img src="images/target.png" height="20" width="20">&nbsp;Write HTTP Clients & Servers</a></h4>
           <p>Communicate over the internet.</p>
-          <img src="httpserver/images/helloworldserver.png" width="350">
+          <img src="images/httpserver-code.png" width="100%">
           </section>
         </div>
 
@@ -312,7 +247,7 @@ from left to right...or choose just the ones you need.
           <section>
           <h4 class="no-permalink"><a href="mobile/"><img src="images/target.png" height="20" width="20">&nbsp;Write for Mobile Devices</a></h4>
           <p>Mobile devices are taking over the world!</p>
-          <img src="images/countdown-screenshot.png" width="300">
+          <img src="images/xxx.png" width="300">
           </section>
         </div>
 
@@ -330,11 +265,10 @@ from left to right...or choose just the ones you need.
 <hr style="border:solid;border-color:Gainsboro">
 
 <aside class="alert alert-info" markdown="1">
-<strong>Do you like to learn by doing?</strong>
-
-Try our code lab:
+<strong>Do you like to learn by doing?</strong> Try our code labs:
 
 * [Avast, Ye Pirates: Write a Web App](/codelabs/darrrt/)
+* [More code labs](/codelabs/)
 
 </aside>
 

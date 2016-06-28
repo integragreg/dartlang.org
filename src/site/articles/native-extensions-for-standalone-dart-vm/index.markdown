@@ -11,6 +11,7 @@ article:
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -45,7 +46,7 @@ Dart library.
 ###Example code
 
 The code for the sample extensions featured in this article is in the
-[samples/sample_extension](http://dart.googlecode.com/svn/trunk/dart/samples/sample_extension)
+[samples/sample_extension](https://github.com/dart-lang/sdk/tree/master/samples/sample_extension)
 directory of the Dart repository.
 
 The sample extensions call the C standard library's rand() and srand()
@@ -57,8 +58,8 @@ Dart files provide examples of using and testing the asynchronous and
 synchronous extensions.
 
 The shared library (native code) for the extensions shown in this article is
-called sample_extension. Its C++ file, [sample_extension.cc](http://dart.googlec
-ode.com/svn/trunk/dart/samples/sample_extension/sample_extension.cc), contains
+called sample_extension. Its C++ file,
+[sample_extension.cc](https://github.com/dart-lang/sdk/blob/master/samples/sample_extension/sample_extension.cc), contains
 six functions that are called from Dart:
 
 sample_extension_Init():
@@ -120,14 +121,12 @@ sample_synchronous_extension.dart starts running:
   for all native functions in the library sample_extension.dart. We'll see what
   the name resolver does when we look at synchronous native functions, below.
 
-<aside>
-  <div class="alert alert-info">
-    <strong>Note:</strong>
+<aside class="alert alert-info">
+<strong>Note:</strong>
 The filename of the shared library depends on the platform. On Windows,
 the VM loads sample_extension.dll, on Linux it loads libsample_extension.so,
 and on Mac it loads libsample_extension.dylib. We show how to build and link
 these shared libraries in an appendix at the end of the article.
-  </div>
 </aside>
 
 ###Using the Dart Embedding API from native code
@@ -148,13 +147,13 @@ same in all Dart native extensions.
 The functions in the native library use the Dart Embedding API to communicate
 with the VM, so the native code includes the header <b>dart_api.h</b>, which
 is in the SDK at dart-sdk/include/dart_api.h or in the repository at
-[runtime/include/dart_api.h](http://dart.googlecode.com/svn/trunk/dart/runtime/include/dart_api.h).
+[runtime/include/dart_api.h](https://github.com/dart-lang/sdk/blob/master/runtime/include/dart_api.h).
 The Dart Embedding API is the interface that embedders use to include the Dart
 VM in a web browser or in the standalone VM for the command line. It consists
 of about 100 function interfaces and many data type and data structure
 definitions. These are all shown, with comments, in dart_api.h. Examples of
 using them are in the unit test file
-[runtime/vm/dart_api_impl_test.cc](http://code.google.com/p/dart/source/browse/trunk/dart/runtime/vm/dart_api_impl_test.cc).
+[runtime/vm/dart_api_impl_test.cc](https://github.com/dart-lang/sdk/blob/master/runtime/vm/dart_api_impl_test.cc).
 
 A native function to be called from Dart must have the
 type **Dart\_NativeFunction**, which is defined in dart_api.h as:
@@ -224,7 +223,7 @@ DART_EXPORT Dart_Handle sample_extension_Init(Dart_Handle parent_library) {
   if (Dart_IsError(parent_library)) return parent_library;
 
   Dart_Handle result_code =
-      Dart_SetNativeResolver(parent_library, ResolveName);
+      Dart_SetNativeResolver(parent_library, ResolveName, NULL);
   if (Dart_IsError(result_code)) return result_code;
 
   return Dart_Null();
@@ -261,7 +260,7 @@ void SystemSrand(Dart_NativeArguments arguments) {
 
 Dart_NativeFunction ResolveName(Dart_Handle name, int argc, bool* auto_setup_scope) {
   // If we fail, we return NULL, and Dart throws an exception.
-  if (!Dart_IsString8(name)) return NULL;
+  if (!Dart_IsString(name)) return NULL;
   Dart_NativeFunction result = NULL;
   const char* cname;
   HandleError(Dart_StringToCString(name, &cname));
@@ -348,7 +347,7 @@ To call this from Dart, we put it in a wrapper that unpacks the Dart_CObject
 containing seed and length, and that packs the result values into a
 Dart_CObject.  A Dart_CObject can hold an integer (of various sizes), a double,
 a string, or an array of Dart_CObjects. It is implemented in
-[dart_api.h](http://dart.googlecode.com/svn/trunk/dart/runtime/include/dart_api.h)
+[dart_api.h](https://github.com/dart-lang/sdk/blob/master/runtime/include/dart_api.h)
 as a struct
 containing a union. Look in dart_api.h to see the fields and tags used to access
 the union's members. After the Dart_CObject is posted, it and all its resources
@@ -485,12 +484,16 @@ sample extension.
 
 On Linux, you can compile the code in the samples/sample_extension directory like this:
 
-	g++ -fPIC -m32 -I{path to SDK include directory} -c sample_extension.cc
+{% prettify none %}
+g++ -fPIC -m32 -I{path to SDK include directory} -DDART_SHARED_LIB -c sample_extension.cc
+{% endprettify %}
 
 To create the shared library from the object file:
 
-    gcc -shared -m32 -Wl,-soname,libsample_extension.so -o
- 	 libsample_extension.so sample_extension.o
+{% prettify none %}
+gcc -shared -m32 -Wl,-soname,libsample_extension.so -o
+libsample_extension.so sample_extension.o
+{% endprettify %}
 
 Remove the -m32 to build a 64-bit library that runs with the 64-bit Dart standalone VM.
 
@@ -501,6 +504,7 @@ Remove the -m32 to build a 64-bit library that runs with the 64-bit Dart standal
 3. Make the following changes in Project/Edit Project Settings, choosing the Build tab and All Configurations in the dialog box:
    1. In section Linking, line Other Linker Flags, add -undefined dynamic_lookup.
    2. In section Search Paths, line Header Search Paths, add the path to dart_api.h in the SDK download or the Dart repository checkout.
+   3. In section Preprocessing, line Preprocessor Macros, add DART_SHARED_LIB=1
 4. Choose the correct architecture (i386 or x86_64), and build by choosing Build/Build.
 
 The resulting lib[extension_name].dylib will be in the <b>build/</b> subdirectory of your project location, so copy it to the desired location (probably the location of the Dart library part of the extension).

@@ -1,5 +1,6 @@
 body {
   font-family: 'Roboto', sans-serif;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -21,7 +22,10 @@ a:hover {
 
 /* place link target below the header bar. The top padding should match the
 header height */
-.has-permalink:target {
+.has-permalink:target,
+a[name]:target, a[id]:target,
+h1[id]:target, h2[id]:target, h3[id]:target,
+h4[id]:target, h5[id]:target, h6[id]:target {
   padding-top: 65px;
 }
 
@@ -83,6 +87,12 @@ ul, li {
 @media (max-width: 992px) {
   .container-page {
     margin-bottom: 40px;
+  }
+}
+
+@media print {
+  .container-page {
+    margin-bottom: 0px;
   }
 }
 
@@ -176,6 +186,10 @@ i.sprite-icon-app-4 {
   background-position: -150px -150px;
 }
 
+i.sprite-icon-app-5 {
+  background-position: -200px -150px;
+}
+
 i.sprite-icon-triangle {
   display: inline-block;
   width: 9px;
@@ -205,6 +219,16 @@ i.sprite-icon-close-x {
   background-position: -150px -200px;
 }
 
+.btn-lg.try-btn {
+  padding: 10px 46px 10px 46px;
+  position: relative;
+}
+
+.btn-lg.download-btn {
+  padding: 10px 46px 10px 66px;
+  position: relative;
+}
+
 i.sprite-icon-download-btn {
   position: absolute;
   left: 40px;
@@ -217,8 +241,20 @@ i.sprite-icon-download-btn {
   background-position: -50px -250px;
 }
 
+.sha {
+  display: block;
+  font-size: 12px;
+  padding: 0 12px 6px;
+}
+
 .nav>li>a {
   padding: 5px 15px;
+}
+
+@media print {
+  .nav>li>a {
+    padding: 1px 15px;
+  }
 }
 
 /* ***** Nav bar ***** */
@@ -378,7 +414,7 @@ i.sprite-icon-download-btn {
 }
 
 @media (max-width: 1000px) {
-  .navbar-search {
+  .navbar-right {
     display: none;
   }
 }
@@ -563,8 +599,22 @@ i.sprite-icon-download-btn {
 
 /* ***** Code ***** */
 
+aside pre {
+  background-color: transparent;
+  border: 0;
+  margin-bottom: 0;
+}
+
+aside code {
+  background-color: transparent;
+}
+
 pre.prettyprint {
   background-color: #f8f8f8;
+}
+
+.allow-scroll {
+  word-wrap: normal;
 }
 
 .code-hldr {
@@ -573,7 +623,8 @@ pre.prettyprint {
   height: 450px;
 }
 
-.lang-dart, .lang-html, .lang-js, .lang-csharp, .lang-python {
+.lang-dart, .lang-html, .lang-js, .lang-bash, .lang-cpp, .lang-csharp,
+.lang-none, .lang-python, .lang-javascript, .lang-yaml {
   max-width: 800px;
   text-align: left;
   margin-right: auto;
@@ -593,12 +644,37 @@ pre.prettyprint {
   padding:2px 3px;
 }
 
-.lang-dart .com, .lang-html .com {
+.lang-dart .com, .lang-html .com, .lang-java .com {
   color: #757575;
+}
+
+.lang-none * {
+  color: #4D4D4D !important; /* color of .pln */
+}
+
+/* Prevent invisibility of popover-emphasized text */
+@media print {
+  .dart-popover .kwd, .dart-popover .pln, .dart-popover .str, .dart-popover .pun {
+    background: black !important;
+  }
 }
 
 .lang-dart a span, .lang-html a span {
   color:#fff !important;
+}
+
+.lang-huge {
+  display: table;
+  font-size: 17px;   /* font-size of btn-lg */
+  line-height: 24px; /* line-height of btn-lg */
+  margin: 12px auto;
+  max-width: 800px;
+  padding: 12px !important;
+  white-space: pre-wrap;
+}
+
+.lang-huge span.kwd {
+  color: #4d4d4d !important /* avoid kwd colors in huge blocks */;
 }
 
 .linenums li {
@@ -677,7 +753,16 @@ pre.prettyprint {
   color: #fff;
 }
 
-.hero .download-btn {
+.hero p {
+  color: #fff;
+}
+
+.hero a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.hero .download-btn, .hero .try-btn {
   background: none;
   border: 1px solid #fff;
   margin-top: 30px;
@@ -685,7 +770,6 @@ pre.prettyprint {
   text-transform: uppercase;
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  padding: 10px 46px 10px 66px;
   -webkit-transition: background ease-out 500ms;
   -moz-transition: background ease-out 500ms;
   -o-transition: background ease-out 500ms;
@@ -693,7 +777,6 @@ pre.prettyprint {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
-  position: relative;
 }
 
 .hero .download-btn:hover {
@@ -901,6 +984,8 @@ pre li {
 
 .editor-current-version {
   margin-bottom: 20px;
+  padding-left: 12px;
+  font-style: italic;
 }
 
 @media (max-width: 992px) {
@@ -913,10 +998,9 @@ pre li {
 /* ***** Buttons ***** */
 
 .btn-lg {
-  padding: 10px 46px;
+  padding: 10px 15px;
   font-size: 16px;
   line-height: 1.33;
-  text-transform:uppercase;
   border:0;
   -webkit-transition: background ease-out 500ms;
   -moz-transition: background ease-out 500ms;
@@ -951,7 +1035,7 @@ pre li {
 }
 
 .sub-page {
-  margin-top:80px;
+  margin-top:124px;
 }
 
 /* SideBar styles adapted from http://getbootstrap.com/docs-assets/css/docs.css */
@@ -1372,7 +1456,7 @@ a.permalink {
  * implemented by using class="glyphicon glyphicon-new-window"
  * instead of this css.
  */
-a[href^="http"]:not(.btn):after {
+a[href^="http"]:not([href^="https://storage"]):not(.btn):after {
   content: "\e164";
   position: relative;
   top: 1px;
@@ -1412,6 +1496,92 @@ a[href^="http"]:not(.btn):after {
  */
 .download-buttons, .os-choices {
   display: none;
+}
+
+.btn-group.os-choices, .download-choices {
+  border-radius: 8px;
+  margin-top: 0;
+  margin-bottom: 20px; /* margin-bottom for h2 */
+}
+
+.btn-group.os-choices button {
+  background-color: rgba(255, 255, 255, 0.7);
+  text-transform: none;
+  font-size: 20px;
+  -webkit-backface-visibility: hidden;
+}
+
+.btn-group.os-choices button.inactive {
+  background-color: #EEE;
+  box-shadow: none;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.btn-group.os-choices button.active {
+  background: 0;
+  color: white;
+  font-weight: 600;
+  opacity: 1;
+}
+
+.download-choices button {
+  text-transform: none;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.download-choices button.btn-primary {
+  font-weight: 600;
+  opacity: 1;
+}
+
+.download-link {
+  white-space: nowrap;
+}
+
+/* Tables in More downloads page.
+ */
+table.downloads th,
+table.downloads td {
+  border: solid 1px #999999;
+  padding: 2px 5px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+table.downloads tr:not(.hidden):nth-child(even) td {
+  background-color: rgba(20, 133, 195, 0.10);
+}
+
+table.downloads .archives {
+  text-align: left;
+}
+
+table.downloads .muted {
+  color: #999999;
+  white-space: nowrap;
+}
+
+table.downloads .nowrap {
+  white-space: nowrap;
+}
+
+table.downloads tr.template td {
+  background-color: white !important;
+  border: 0;
+}
+
+table.downloads td.archives div:not(:last-child) {
+  margin-bottom: 6px;
+}
+
+table.downloads .has-sha {
+  display: inline-block;
+  min-width: 80px;
+}
+
+table.downloads .sha {
+  display: inline;
 }
 
 /* Spacing for definition lists. */
@@ -1515,4 +1685,35 @@ dd{
 
 .titlepage h3 {
   font: 400 26px/32px 'Montserrat', sans-serif;
+}
+
+/* Add a box; needed for some screenshot images. */
+.thinborder {
+    border:1px solid #021a40;
+}
+
+/*
+ * Because Bootstrap doesn't have a responsive button group yet.
+ */
+@media (max-width: 768px) {
+  .btn-group-responsive .btn-group {
+    display: block;
+    width: 100%;
+  }
+
+  .btn-group-responsive .btn-group + .btn-group {
+    margin-left: 0;
+  }
+
+  .btn-group-responsive > .btn-group:first-child:not(:last-child) > .btn {
+    border-radius: 6px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .btn-group-responsive > .btn-group:last-child:not(:first-child) > .btn {
+    border-radius: 6px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
 }

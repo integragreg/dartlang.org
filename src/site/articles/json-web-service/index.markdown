@@ -12,6 +12,7 @@ article:
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -216,8 +217,9 @@ cannot be validated before run-time.
 One of the benefits of using Dart is support for optional static types. Static
 types help you catch bugs early by allowing tools to detect type mismatches
 before you run your code, and to throw exceptions as soon as a runtime issue
-occurs.  An additional benefit of using static types is that Dart Editor also
-uses this type information to provide auto-complete information&mdash;helpful
+occurs.  An additional benefit of using static types is that code editors
+and IDEs (such as WebStorm, Sublime, vim)
+use this type information to provide auto-complete information&mdash;helpful
 when you are using a new library or data structure.
 
 Ideally, you want to access JSON data in a structured way, taking advantage of
@@ -280,18 +282,17 @@ to help with type checking, and allow your classes to convert back and forth bet
 If factory constructors and implementing interfaces sounds like hard work, the following example shows that it really isn't.
 
 {% prettify dart %}
-// Abstract class defines the interface of our JSON data structure
+/// Abstract class defines the interface of our JSON data structure
 abstract class Language {
   String language;
   List targets;
   Map website;
 }
 
-/** Implementation class extends JsonObject, and uses the structure
- *  defined by implementing the Language abstract class. 
- *  JsonObject's noSuchMethod() function provides the actual underlying
- *  implementation.
- */
+/// Implementation class extends JsonObject, and uses the structure
+/// defined by implementing the Language abstract class. 
+/// JsonObject's noSuchMethod() function provides the actual underlying
+/// implementation.
 class LanguageImpl extends JsonObject implements Language {
   LanguageImpl(); 
   
@@ -354,18 +355,18 @@ req.send(json);
 {% endprettify %}
 
 You can include JsonObject in your project by using the
-[pub](http://pub.dartlang.org) package manager.
-Simply specify the following dependency:
+[pub](https://pub.dartlang.org) package manager.
+Simply specify a dependency on `json_object`:
 
 {% prettify yaml %}
 dependencies:
-  json_object: any
+  json_object: ^1.0.19
 {% endprettify %}
 
 and import the package using the following import statement:
 
 {% prettify dart %}
-import "package:json_object/json_object.dart";
+import 'package:json_object/json_object.dart';
 {% endprettify %}
 
 ### A note on CORS and HttpRequest
@@ -384,12 +385,12 @@ an emerging technology known as
 that accompanies this article](https://github.com/chrisbu/dartlang_json_webservice_article_code), 
 you can find [simpleserver.dart](https://github.com/chrisbu/dartlang_json_webservice_article_code/blob/master/simpleserver/simpleserver.dart) that serves example JSON data for this article.
 This makes use of CORS headers to allow access from a different URL, such as 
-the automatically generated URL of apps launched from the Dart editor.
+the automatically generated URL of apps launched from WebStorm.
 
 The second, older way, that only works for GET requests is to use a workaround 
 called JSONP, which makes use of JavaScript callbacks.  
 The Dart - JavaScript interop libraries in the [js 
-interop package](http://pub.dartlang.org/packages/js) available on pub
+interop package](https://pub.dartlang.org/packages/js) available on pub
 are suitable for JavaScript callbacks:
 
 {% prettify dart %}
@@ -414,7 +415,7 @@ void main() {
 {% endprettify %}
 
 For more detailed information about JS Interop, see
-the [js package docs](http://dart-lang.github.com/js-interop/docs/js.html).
+the [js package docs](https://dart-lang.github.com/js-interop/docs/js.html).
 
 ## Summary
 
@@ -431,7 +432,7 @@ dart:convert library by letting you use dot notation to access data fields.
 * [HttpRequest](http://api.dartlang.org/html/HttpRequest.html)
 * [JsonObject](https://github.com/chrisbu/dartwatch-JsonObject)
 * [Using JSONP with Dart](http://blog.sethladd.com/2012/03/jsonp-with-dart.html)
-* [Dart JS Interop Library](http://dart-lang.github.com/js-interop/docs/js.html)
+* [Dart JS Interop Library](https://dart-lang.github.com/js-interop/docs/js.html)
 * [About access-control restrictions](https://developer.mozilla.org/en/http_access_control)
 
 ### About the author

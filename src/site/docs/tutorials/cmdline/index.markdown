@@ -7,8 +7,8 @@ tutorial:
   id: dart-io
 next: httpserver
 next-title: "Write HTTP Clients & Servers"
-prev: indexeddb/
-prev-title: "Use IndexedDB"
+prev: fetchdata/
+prev-title: "Fetch Data Dynamically"
 ---
 
 {% capture whats_the_point %}
@@ -24,9 +24,10 @@ prev-title: "Use IndexedDB"
 
 {% capture sample_links %}
 
-<p> This tutorial features these examples:</p>
-* helloworld
-* dcat
+This tutorial features the following example
+under the **cmdline/bin** directory:
+
+* dcat.dart
 
 <p>
 Don't have the source code?
@@ -65,22 +66,16 @@ command-line arguments, files and directories, and more.
 ## Running an app with the standalone Dart VM {#run-the-first-app}
 
 To run a command-line app, you need the Dart VM (`dart`),
-which comes in the [Dart SDK download](/tools/sdk/).
-(If you downloaded Dart Editor, you already have the Dart VM.)
+which comes in the [Dart SDK download](/downloads/).
 
-If you installed the Dart download in a directory called `~/myDartDownload`,
-you can find `dart`
-in `~/myDartDownload/dart-sdk/bin`.
-
-<div markdown="1">
-
-![The path to the Dart VM](images/filestructure.png)
-
-</div>
-
+The location of the SDK installation directory
+(we'll call it _&lt;sdk-install-dir&gt;_) depends on your platform
+and how you downloaded the SDK.
+You can find `dart` in _&lt;sdk-install-dir&gt;_/bin.
 By putting this directory in your PATH
-you can refer to the `dart` command and other commands,
-such as the dart analyzer, by name.
+you can refer to the `dart` command and other commands, such as
+[dartanalyzer](https://github.com/dart-lang/analyzer_cli#dartanalyzer),
+by name.
 
 Let's run a small program.
 
@@ -180,7 +175,7 @@ _handleError(String path) {
 ## Parsing command-line arguments {#cmd-line-args}
 
 The
-<a href="https://api.dartlang.org/args.html" target="_blank">args</a>
+<a href="https://pub.dartlang.org/packages/args" target="_blank">args</a>
 package, a software bundle that contains a library of Dart code, provides
 parser support for transforming raw command-line arguments
 into a set of options, flags, and additional values.
@@ -204,19 +199,19 @@ which uses ArgParser and ArgResults to parse and store its command-line argument
 <ol>
 <li markdown="1">
 Copy the sample file from the github repo:
-<a href="https://github.com/dart-lang/dart-tutorials-samples/blob/master/bin/cmdline/dcat.dart">dcat.dart</a>.
+<a href="https://github.com/dart-lang/dart-tutorials-samples/blob/master/cmdline/bin/dcat.dart">dcat.dart</a>.
 </li>
 
 <li markdown="1">
-Run the program from the command line as shown by the highlighted text.
+Run the program from the command line as shown by the **boldface** text.
 
-{% prettify bash %}
-$ [[highlight]]dart dcat.dart -n quotes.txt[[/highlight]]
+<pre>
+$ <b>dart dcat.dart -n quotes.txt</b>
 1 Be yourself. Everyone else is taken. -Oscar Wilde
 2 Don't cry because it's over, smile because it happened. -Dr. Seuss
 3 You only live once, but if you do it right, once is enough. -Mae West
 ...
-{% endprettify %}
+</pre>
 
 The program displays the contents of the source code file and
 preceeds each line with a line number.
@@ -236,7 +231,6 @@ You can access other values with properties such as `rest`.
 Here's the code from `dcat` that deals with command-line arguments:
 
 <pre class="prettyprint lang-dart">
-
 ...
 <a href="#" class="dart-popover" data-toggle="popover" title="Parsed arguments" data-html="true" data-trigger="hover focus" data-content="This object contains parsed options and flags.">ArgResults argResults;</a>
 
@@ -252,7 +246,7 @@ void main(<a href="#" class="dart-popover" data-toggle="popover" title="Command-
 ...
 </pre>
 
-The 
+The
 <a href="https://api.dartlang.org/args.html" target="_blank">API docs</a>
 for the args library
 provide detailed information
@@ -374,7 +368,7 @@ The quick brown fox jumped over the lazy dog.
 
 ## Getting info about a file {#filesystementity}
 
-The 
+The
 <a href="https://api.dartlang.org/dart_io/FileSystemEntity.html" target="_blank">FileSystemEntity</a>
 class in the dart:io library provides
 properties and static methods that help you inspect and manipulate the file system.
@@ -425,12 +419,12 @@ return Future.forEach(paths, (path) {
 
   return stream
       ...
-      [[highlight]].listen((line) {
-        if (showLineNumbers) {
-          stdout.write('${lineNumber++} ');
-        }
-        stdout.writeln(line);
-      })[[/highlight]].asFuture()
+      [[highlight]].listen((line) {[[/highlight]]
+        [[highlight]]if (showLineNumbers) {[[/highlight]]
+          [[highlight]]stdout.write('${lineNumber++} ');[[/highlight]]
+        [[highlight]]}[[/highlight]]
+        [[highlight]]stdout.writeln(line);[[/highlight]]
+      [[highlight]]})[[/highlight]].asFuture()
           .catchError((_) => _handleError(path));
 });
 {% endprettify %}
@@ -447,8 +441,8 @@ return Future.forEach(paths, (path) {
   Stream<List<int>> stream = new File(path).openRead();
 
   return stream
-      [[highlight]].transform(UTF8.decoder)
-      .transform(const LineSplitter())[[/highlight]]
+      [[highlight]].transform(UTF8.decoder)[[/highlight]]
+      [[highlight]].transform(const LineSplitter())[[/highlight]]
       .listen((line) {
         if (showLineNumbers) {
           stdout.write('${lineNumber++} ');
@@ -470,7 +464,7 @@ import 'dart:convert';
 ## Writing a file {#writing-a-file}
 
 The easiest way to write text to a file is to
-create a 
+create a
 <a href="https://api.dartlang.org/dart_io/File.html" target="_blank">File</a>
 object and use the `writeAsString()` method:
 
@@ -514,7 +508,7 @@ Note: Use the Platform class from the dart:io library,
 not from the dart:html library.
 
 `Platform.environment` provides a copy of the environment
-variables in an immutable map. If you need a mutable map (modifiable copy) you 
+variables in an immutable map. If you need a mutable map (modifiable copy) you
 can use `Map.from(Platform.environment)`.
 
 {% prettify dart %}
@@ -614,12 +608,8 @@ In addition, this tutorial covers two classes that help with command-line argume
 
 ## Other resources {#other-resources}
 
-Check out the [Command-line Apps Programmers' Guide](/docs/serverguide.html)
+Check out the [Dart for Server](https://dart-lang.github.io/server/)
 to find more resources related to writing command-line apps.
-
-See the
-[Dartiverse Search walkthrough](/docs/dart-up-and-running/contents/ch05.html)
-for an example of another kind of command-line app: an HTTP server.
 
 Refer to the API docs for <a href="https://api.dartlang.org/dart_io.html" target="_blank">dart:io</a>,
 <a href="https://api.dartlang.org/dart_async.html" target="_blank">dart:async</a>,
@@ -633,12 +623,6 @@ package for more classes, functions, and properties.
 * If you are interested in server-side programming,
 check out the next tutorial,
 [Write HTTP Clients & Servers](/docs/tutorials/httpserver/).
-
-* The [Get Input from a Form](/docs/tutorials/forms/) tutorial
-features a client-server.
-The code for the server, which uses CORS headers and handles
-POST requests, is explained in detail.
-
 {% endcapture %}
 
 {% include tutorial.html %}

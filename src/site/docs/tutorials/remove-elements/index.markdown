@@ -21,18 +21,10 @@ expression.
 
 {% endcapture %}
 
-{% capture sample_links %}
-
-<p> This tutorial features this example:</p>
-* todo_with_delete
-
-<p>
-Don't have the source code?
-<a href="https://github.com/dart-lang/dart-tutorials-samples/archive/master.zip">
-  Download it.
-</a>
-
-{% endcapture %}
+{% comment %}
+NOTE: No sample_links section goes here because all the samples are in
+embedded DartPads.
+{% endcomment %}
 
 {% capture content %}
 
@@ -62,8 +54,46 @@ of the todo app from the previous tutorial
 that allows you to delete items.
 Stop procrastinating and remove items from your to do list.
 
+{% comment %}
+https://gist.github.com/Sfshaza/582b9a8d36786566ba08
+
+------------------------------------------------------------------
+main.dart:
+------------------------------------------------------------------
+
+// Copyright (c) 2012, the Dart project authors.
+// Please see the AUTHORS file for details.
+// All rights reserved. Use of this source code
+// is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import 'dart:html';
+
+InputElement toDoInput;
+UListElement toDoList;
+ButtonElement deleteAll;
+
+void main() {
+  toDoInput = querySelector('#to-do-input');
+  toDoList = querySelector('#to-do-list');
+  toDoInput.onChange.listen(addToDoItem);
+  deleteAll = querySelector('#delete-all');
+  deleteAll.onClick.listen((e) =>
+      toDoList.children.clear());
+}
+
+void addToDoItem(Event e) {
+  var newToDo = new LIElement();
+  newToDo.text = toDoInput.value;
+  newToDo.onClick.listen((e) => newToDo.remove());
+  toDoInput.value = '';
+  toDoList.children.add(newToDo);
+}
+{% endcomment %}
+
 **Try it!**
-Type in the input field and press the return key;
+Click run ( <img src="/imgs/run.png" /> ) to start the web app.
+Then type in the app's input field, and press the return key;
 a new item appears in the list.
 Enter a few more items.
 Point the mouse cursor at one of the items in the list;
@@ -72,9 +102,11 @@ Click it and it disappears from the list.
 Use the **Delete All** button
 to remove all of the items in the list at once.
 
-<iframe class="running-app-frame"
-        style="height:250px;width:300px;"
-        src="examples/todo_with_delete/todo_with_delete.html">
+<iframe
+src="{{site.custom.dartpad.embed-html-prefix}}?id=582b9a8d36786566ba08&horizontalRatio=60&verticalRatio=80"
+    width="100%"
+    height="500px"
+    style="border: 1px solid #ccc;">
 </iframe>
 
 The remaining sections describe
@@ -238,11 +270,11 @@ it returns no value and takes an Event object as a parameter.
 [Install Shared Packages](/docs/tutorials/shared-pkgs),
 shows you how to use code written and shared by others.
 
-* One of those packages is Polymer.dart,
+* One of those packages is polymer.dart,
 which makes manipulating the DOM even easier
 with data binding, templates, and declarative event handlers.
-Check out [Define a Custom Element](/docs/tutorials/polymer-intro)
-for an introduction to Polymer.
+Check out [Polymer Dart](https://github.com/dart-lang/polymer-dart/wiki)
+for more information.
 
 {% endcapture %}
 

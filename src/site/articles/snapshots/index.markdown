@@ -11,6 +11,7 @@ article:
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -24,12 +25,6 @@ If you write command-line apps,
 you should be able to improve their startup time
 by generating your own snapshots,
 following the instructions in this article.
-
-If you write web apps, you don’t need to do anything:
-browsers with the Dart VM can snapshot your app automatically.
-The next time your web app runs,
-the browser can retrieve the snapshot from the browser cache
-and use it to start your app faster.
 
 ## What is a snapshot?
 
@@ -52,7 +47,7 @@ The Dart VM uses snapshots for two main reasons:
 
 * **Passing objects**
   from one isolate to another isolate.
- 
+
 The Dart VM uses the following kinds of snapshots:
 
 * A **full snapshot**,
@@ -61,7 +56,7 @@ The Dart VM uses the following kinds of snapshots:
   This is used by the Dart VM for
   fast startup and initialization of
   the entire Dart core library and other libraries
-  such as dart:uri, dart:io, dart:utf, dart:json, dart:isolate, and so on.
+  such as dart:convert, dart:io, dart:isolate, and so on.
 
 * A **script snapshot**,
   which is a complete representation of
@@ -78,21 +73,6 @@ The Dart VM uses the following kinds of snapshots:
   is implemented in the Dart VM by
   creating a snapshot of the Dart object
   that needs to be sent to the other isolate.
-
-
-## How the browser can use snapshots
-
-A browser that contains the Dart VM uses
-a full snapshot for fast startup and initialization
-of the main Dart isolate.
-This snapshot contains the entire Dart core library and other libraries
-such as dart:uri, dart:utf, dart:json, dart:isolate, and dart:html.
-
-In addition, the browser could potentially generate
-a script snapshot of an application that has been loaded
-and cache it in the browser cache.
-This cached script snapshot could then be used for
-subsequent reloads of the application for faster application startup.
 
 
 ## How to generate and use script snapshots
@@ -115,9 +95,9 @@ You can use the `--package_root` option
 to specify the location of packages used in imports
 (`import 'package:...'`).
 
-<pre>
-dart <em>[</em>--package_root=<em>path]</em> --snapshot=<em>out-file</em> <em>dart-script-file</em>
-</pre>
+{% prettify sh %}
+dart [--package_root=<path>] --snapshot=<output_file> <dart_file>
+{% endprettify %}
 
 The `--snapshot` option writes
 a script snapshot of _dart-script-file_ to _out-file_.
@@ -126,16 +106,16 @@ a snapshot of the Dart script `dart2js.dart`,
 putting it into a file called `dart2js.snapshot`.
 
 {% prettify sh %}
-dart --snapshot=dart2js.snapshot \ 
+dart --snapshot=dart2js.snapshot \
     dart-sdk/lib/dart2js/lib/_internal/compiler/implementation/dart2js.dart
 {% endprettify %}
 
 To execute a script from its snapshot,
 specify the snapshot file on the command line:
 
-<pre>
-dart <em>snapshot-file</em> <em>args</em>
-</pre>
+{% prettify sh %}
+dart <snapshot_file> <args>
+{% endprettify %}
 
 Any _args_ you specify are passed to the script.
 For example, you can run dart2js like this,
@@ -153,9 +133,9 @@ The gen_snapshot tool writes a full snapshot
 (corelibs, dart:uri, dart:io, dart:utf, dart:json, dart:isolate, ...)
 to _out-file_:
 
-<pre>
-gen_snapshot <em>[options]</em> --snapshot=<em>out-file</em>
-</pre>
+{% prettify sh %}
+gen_snapshot [<options>] --snapshot=<out_file>
+{% endprettify %}
 
 You can use the following _options_:
 
@@ -186,7 +166,7 @@ You can use the following _options_:
 
 You can find more information about snapshots
 and how they are implemented by browsing the files in the
-[dart/runtime/vm directory](http://code.google.com/p/dart/source/browse/#svn%2Fbranches%2Fbleeding_edge%2Fdart%2Fruntime%2Fvm).
+[runtime/vm directory](https://github.com/dart-lang/sdk/tree/master/runtime/vm).
 Start by looking for "Snapshot" in
-[snapshot.h](http://code.google.com/p/dart/source/browse/branches/bleeding_edge/dart/runtime/vm/snapshot.h).
+[snapshot.h](https://github.com/dart-lang/sdk/blob/master/runtime/vm/snapshot.h).
 Note that the code might move as the implementation changes.

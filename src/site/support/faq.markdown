@@ -2,8 +2,6 @@
 layout: default
 title: Frequently Asked Questions (FAQ)
 description: You have questions about Dart, we have answers.
-rel:
-  author: eli-brandt
 has-permalinks: true
 ---
 
@@ -11,7 +9,7 @@ has-permalinks: true
 
 # {{ page.title }}
 
-_Updated December 2013_
+_Updated April 2015_
 
 This page collects some of the top questions we've heard from the community
 since Dart was open sourced. For more details, read the
@@ -59,19 +57,21 @@ directly with C++?  People face different engineering tradeoffs and choose
 different languages to meet them.  Ultimately, we think client-side developers
 should have this kind of flexibility.
 
-### Q. Is Google planning to put Dart under the control of a standards body?
+### Q. Is Dart under the control of a standards body?
 
-In December 2013, [Ecma formed TC52][tc52] to publish a standard specification
-of the Dart language.
+Yes. As of December 2013, [Ecma TC52][tc52] has been put in charge to own,
+evolve, and publish the [standard specification][spec] of the Dart language.
+In addition to TC52, we have also introduced a process for submitting
+Dart enhancement proposals ([DEP][DEP]), because we wanted to make it easier
+to contribute to and follow the evolvement of Dart.
 
-### Q. Until that point, how are you taking input on changes to Dart?
+### Q. How are you taking input on changes to the Dart repository?
 
-We handle it like the V8 project.  We listen to feedback and issues,
-and we review patches from outside contributors.  A contributor with a good
-track record can become a committer to the repository.  Google engineers will
-also be working in the public repository, making visible changes. The project
-is lucky to have received many external patches and has welcomed distributed
-committers.
+We listen to feedback and issues, and we review patches from contributors.
+A contributor with a good track record can become a committer to the repository.
+Google engineers will also be working in the public repository, making visible
+changes. The project is lucky to have received many external patches and has
+welcomed distributed committers.
 
 ### Q. Why didn't Google make Dart an open standard right from the start?
 
@@ -98,7 +98,7 @@ reasons:
 * Google already works on a multi-language bytecode:
 [LLVM bitcode in PNaCl][pnacl].
 
-* Even if a bytecode VM is specialized for Dart, a language VM will be simpler 
+* Even if a bytecode VM is specialized for Dart, a language VM will be simpler
 and faster because it can work under stronger assumptions&mdash;for instance,
 a structured control flow.  These assumptions make the implementation cleaner
 and optimizations easier.
@@ -332,7 +332,7 @@ appreciation through careful design choices and fair communication about them.
 Type inferencing is not something specified by the language specification, but
 it is something that implementations are free to do. It's important to remember
 that Dart has a dynamic type system, so type inferencing doesn't play the same
-role as it does in languages such as Haskell. However, Dart Editor does do some
+role as it does in languages such as Haskell. However, IDEs might do some
 type inferencing, such as when you use var for local variables.
 
 ### Q. Why are type annotations optional?
@@ -402,14 +402,20 @@ Again, we're trying to be pragmatic, and we think the outcome is reasonable.
 
 ### Q. What browsers do you support as JavaScript compilation targets?
 
-We're currently aiming to support the following browsers:
+We support the following browsers:
 
-* Internet Explorer, versions 9 and 10.
+* Internet Explorer, versions 9, 10, and 11.
+  * Dart v1.5 was the last release to support Internet Explorer 9.
 * Firefox, latest version.
 * Chrome, latest version.
 * Safari for desktop, version 6.
+* Safari for mobile, version 6.
 
-### Q. Why doesn't Dart support IE8 or earlier?
+{% comment %}
+[TODO: check version #s every time we update this file]
+{% endcomment %}
+
+### Q. Why doesn't Dart support IE9 or earlier?
 
 Supporting legacy browsers takes a lot
 of engineering resources and testing infrastructure.
@@ -418,21 +424,18 @@ to spend valuable resources on supporting browsers that are dying or dead.
 Also, dart2js can emit efficient code if it assumes a modern browser with
 ECMAScript5 or greater features.
 
-### Q. What browsers support the Dart VM now?
+### Q. Is Dart supported by my browser?
 
-As of December 2013, no production browsers can execute Dart code unless it's
-first compiled to JavaScript. However, [Dart Editor][editor]
-ships with a version of Chromium (called [Dartium]) that has the Dart
-VM integrated into it. Dartium not only executes Dart code natively, but it also
-has really good interoperability with Dart Editor so that you can debug your
-Dart applications directly from within Dart Editor.
+Although no production browsers can execute Dart code directly,
+all modern browsers can execute Dart code that's been compiled to JavaScript.
+For convenience while you're developing Dart code,
+you can use a version of Chromium (nicknamed [Dartium])
+has the Dart VM integrated into it.
 
 ### Q. Will the Dart VM get into Chrome?
 
-The Dart team is working on integrating the VM into Chrome. We don't have a
-timeline, but you can follow open-source projects such as [Oilpan] and
-[Dartium] for a sense of progress. Meanwhile, Dart
-is designed to compile to JavaScript to run across the modern web, and the
+[No.](http://news.dartlang.org/2015/03/dart-for-entire-web.html)
+Dart is designed to compile to JavaScript to run across the modern web, and the
 dart2js compiler is a top priority for the team.
 
 ### Q. Why is the code for "Hello, World" so big, compared to the original Dart code, after compilation to JavaScript?
@@ -549,7 +552,8 @@ only when necessary.
 ### Q. I have a large application written in GWT. How do I port it to Dart?
 
 Java and Dart are syntactically similar, so this might be easier than you think.
-You can rely on Dart Editor to flag any syntax problems. Alternatively, you may
+You can rely on the [Dart analyzer][dartanalyzer]
+to flag any syntax problems. Alternatively, you may
 consider porting one feature at a time to Dart and using the
 [JavaScript interoperability library][jsinterop] as the common middle
 ground. Be sure to watch our Google I/O 2012 talk <a
@@ -563,12 +567,9 @@ Yes.  See the [JSON] converters in the dart:convert library.
 
 ### Q. Can Dart run on the server?
 
-Yes.  The dart:io library is aimed at server-side code that runs on the
-standalone Dart VM. dart:io uses an asynchronous programming model inspired by
-node.js, EventMachine, and Twisted. See
-[An Introduction to the dart:io Library][io] to learn more.
+Yes. See [Dart on the Server] for details.
 
-### Q. How do I use 3rd party code, or share code?
+### Q. How do I use third party code, or share code?
 
 You can find many packages on [pub.dartlang.org][pub], a service for hosting
 packages of Dart code. Use the `pub` command to package your code and upload
@@ -587,14 +588,19 @@ polyfills and usability enhancements for web components.
 
 Both. Or either. It's really up to you. We envision a world where polymer
 lets you create and use custom elements. You should be able to use custom
-elements in any web app or web app.
+elements in any web app.
 
-### Q. Do I need to use Dart Editor to use Dart?
+### Q. Do I need to use a particular editor or IDE to write Dart code?
 
-Nope. You can write Dart code with your favorite editor. Dart Editor is
-designed to give new users a smooth onramp to Dart. We expect some developers
-to graduate to full-featured IDEs like Eclipse or WebStorm, both of which have
-Dart plugins. You can also try Dart plugins for Sublime, VIM, Emacs, and others.
+Nope.
+You can try out Dart code with [DartPad],
+and then use your favorite editor or IDE for real development.
+Some full-featured IDEs such as IntelliJ IDEA
+and WebStorm have Dart plugins.
+Dart plugins also exist for Sublime, VIM, Emacs, and other editors.
+We used to provide a Dart-specific editor called Dart Editor,
+but as of 1.11 Dart Editor is no longer available.
+For more information, see [Dart Tools].
 
 ### Q. Can I build an Android app with Dart?
 
@@ -604,20 +610,20 @@ happen.
 
 ### Q. Can I build a Chrome App with Dart?
 
-You can use the [chrome.dart] libraries, but as of December 2013 you
+You can use the [chrome.dart] libraries, but as of December 2014 you
 still need to compile to JavaScript. But otherwise, yes, you can build
 a Chrome App with Dart.
 
 ### Q. Can I use Dart on App Engine?
 
-We think that would be pretty cool, but you'd have to ask the App Engine team.
-Meanwhile, star this bug:
-<https://code.google.com/p/googleappengine/issues/detail?id=6092>
+Yes! See
+[Dart and Google Cloud Platform]
+for details.
 
 ### Q. What CPU architectures does the Dart VM support?
 
-The Dart VM works on IA-32, x64, MIPS, and certain kinds of ARM processors
-(needs at least version 7 and VFP+SIMD).
+The Dart VM works on IA-32, x64, MIPS, ARMv5TE, ARMv6, ARMv7, and
+ARM64 processors.
 
 ### Q. What are some real-world production deployments of Dart?
 
@@ -625,6 +631,7 @@ The [Dart 1.0 announcement][announcement] lists a few, like
 internal Google apps, external Google apps,
 Mixbook, blossom.io, Soundtrap, Mandrill, and more.
 Many more have been released or are in development.
+See [Who Uses Dart] for more.
 
 [dartisnotjava]: http://programming.oreilly.com/2013/05/dart-is-not-the-language-you-think-it-is.html
 [fixallthethings]: http://hyperboleandahalf.blogspot.com/2010/06/this-is-why-ill-never-be-adult.html
@@ -632,21 +639,28 @@ Many more have been released or are in development.
 [pnacl]: https://developers.google.com/native-client/overview#distributing-an-application
 [whynotbytecode]: /articles/why-not-bytecode/
 [typescript]: http://news.dartlang.org/2012/10/the-dart-team-welcomes-typescript.html
-[issues]: http://code.google.com/p/dart/issues/list
+[issues]: http://dartbug.com/
 [jsinterop]: /articles/js-dart-interop/
-[editor]: /tools/editor/
 [sourcemaps]: http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/
 [io]: /articles/io/
-[pub]: http://pub.dartlang.org
-[AngularDart]: http://pub.dartlang.org/packages/angular
-[Polymer.dart]: /polymer-dart/
+[pub]: https://pub.dartlang.org
+[AngularDart]: https://angulardart.org
+[Polymer.dart]: /polymer/
 [ppwsize]: http://work.j832.com/2012/11/excited-to-see-dart2js-minified-output.html
-[perf]: https://www.dartlang.org/performance/
+[perf]: /performance/
 [chrome.dart]: https://github.com/dart-gde/chrome.dart
 [announcement]: http://blog.chromium.org/2013/11/dart-10-stable-sdk-for-structured-web.html
-[lang]: https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html
-[libs]: https://www.dartlang.org/docs/dart-up-and-running/contents/ch03.html
+[lang]: /docs/dart-up-and-running/ch02.html
+[libs]: /docs/dart-up-and-running/ch03.html
 [Oilpan]: https://docs.google.com/a/google.com/document/d/1y7_0ni0E_kxvrah-QtnreMlzCDKN3QP4BN1Aw7eSLfY
-[Dartium]: https://www.dartlang.org/tools/dartium/
+[Dartium]: /tools/dartium/
 [JSON]: http://api.dartlang.org/docs/channels/stable/latest/dart_convert.html#JSON
 [tc52]: http://news.dartlang.org/2013/12/ecma-forms-tc52-for-dart-standardization.html
+[Dart on the Server]: https://dart-lang.github.io/server/
+[Dart Tools]: /tools/
+[Dart and Google Cloud Platform]: https://dart-lang.github.io/server/google-cloud-platform/
+[Who Uses Dart]: /community/who-uses-dart.html
+[spec]: http://www.ecma-international.org/publications/standards/Ecma-408.htm
+[DEP]: https://github.com/dart-lang/dart_enhancement_proposals
+[dartanalyzer]: https://github.com/dart-lang/analyzer_cli#dartanalyzer
+[DartPad]: {{site.custom.dartpad.direct-link}}

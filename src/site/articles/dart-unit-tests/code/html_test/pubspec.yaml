@@ -1,5 +1,0 @@
-name: html_test
-description: A sample web application
-dependencies:
-  unittest: any
-  browser: any

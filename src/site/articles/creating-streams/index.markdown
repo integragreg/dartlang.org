@@ -15,6 +15,7 @@ article:
 </style>
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -51,7 +52,7 @@ For details on how stream transformers have changed, see the
 </aside>
 
 For help on using streams, see
-[Use Streams for Data](/docs/tutorials/streams/).
+[Asynchronous Programming: Streams](/docs/tutorials/streams/).
 
 ## Transforming an existing stream
 
@@ -106,7 +107,7 @@ into a single event, using transform() with a
 [StreamEventTransformer](http://api.dartlang.org/dart_async/StreamEventTransformer.html) subclass:
 
 {% prettify dart %}
-/** Combines strings, breaking them at 80 characters. */
+/// Combines strings, breaking them at 80 characters.
 class BlockBreaker extends StreamEventTransformer<String, String> {
   String carry = '';
   void handleData(String data, EventSink<String> output) {
@@ -495,7 +496,7 @@ keep these tips in mind:
 
   {% prettify dart %}
 subscription = stream.listen(handler);
-{% endprettify %}
+  {% endprettify %}
 
 * The `onListen`, `onPause`, `onResume`, and `onCancel`
   callbacks defined by StreamController are

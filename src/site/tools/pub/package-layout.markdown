@@ -4,6 +4,7 @@ title: "Pub Package Layout Conventions"
 ---
 
 {% include toc.html %}
+{% include breadcrumbs.html %}
 
 # {{ page.title }}
 
@@ -12,8 +13,9 @@ same thing the same way, it makes it easier for us to learn our way around
 each other's work. It also makes it easier to write tools that can
 automatically do things for us.
 
-When you build a [pub](/tools/pub/) package, we have a set of conventions we encourage you to
-follow. They describe how you organize the files and directories within your
+When you build a [pub](/tools/pub/) package,
+we have a set of conventions we encourage you to follow.
+They describe how you organize the files and directories within your
 package, and how to name things. You don't have to have every single thing
 these guidelines specify. If your package doesn't have binaries, it doesn't
 need a directory for them. But if it does, you'll make everyone's life easier
@@ -23,68 +25,94 @@ To give you a picture of the whole enchilada, here's what a complete package
 (conveniently named `enchilada`) that uses every corner of these guidelines
 would look like:
 
-    enchilada/
-      pubspec.yaml
-      pubspec.lock *
-      README.md
-      LICENSE
-      benchmark/
-        make_lunch.dart
-        packages/ **
-      bin/
-        enchilada
-        packages/ **
-      doc/
-        getting_started.md
-      example/
-        lunch.dart
-        packages/ **
-      lib/
-        enchilada.dart
-        tortilla.dart
-        guacamole.css
-        src/
-          beans.dart
-          queso.dart
-      packages/ **
-      test/
-        enchilada_test.dart
-        tortilla_test.dart
-        packages/ **
-      tool/
-        generate_docs.dart
-      web/
-        index.html
-        main.dart
-        style.css
+{% prettify none %}
+enchilada/
+  .packages *
+  pubspec.yaml
+  pubspec.lock **
+  README.md
+  CHANGELOG.md
+  LICENSE
+  benchmark/
+    make_lunch.dart
+    packages/ ***
+  bin/
+    enchilada
+    packages/ ***
+  doc/
+    api/ ****
+    getting_started.md
+  example/
+    lunch.dart
+    packages/ ***
+  lib/
+    enchilada.dart
+    tortilla.dart
+    guacamole.css
+    src/
+      beans.dart
+      queso.dart
+  packages/ ***
+  test/
+    enchilada_test.dart
+    tortilla_test.dart
+    packages/ ***
+  tool/
+    generate_docs.dart
+  web/
+    index.html
+    main.dart
+    style.css
+{% endprettify %}
 
-\* The `pubspec.lock` will only be in source control if the package is an
-[application package](glossary.html#application-package).
+\* As of 1.12, the `.packages` file exists after you've run `pub get`.
+   Don't check it into source control.
 
-\** The `packages` directories will exist locally after you've run
-`pub get`, but won't be checked into source control.
+\** The `pubspec.lock` file exists after you've run `pub get`.
+    Leave it out of source control unless your package is an
+    [application package](glossary.html#application-package).
+
+\*** The `packages` directories exist locally after you've run `pub get`.
+     Don't check these into source control.
+
+\**** The `doc/api` directory exists locally after you've run
+      [dartdoc](https://github.com/dart-lang/dartdoc#dartdoc).
+      Don't check the `api` directory into source control.
+
+{% include coming-release.html %}
+
+{% comment %}
+Not ready for this...
+These symlinks are not generated if you specify `--no-package-symlinks` in
+Dart 1.2 or later.
+{% endcomment %}
 
 ## The basics
 
-    enchilada/
-      pubspec.yaml
-      pubspec.lock
+{% prettify none %}
+enchilada/
+  pubspec.yaml
+  pubspec.lock
+{% endprettify %}
 
-Every package will have a [_pubspec_](pubspec.html), a file named
+Every package has a [_pubspec_](pubspec.html), a file named
 `pubspec.yaml`, in the root directory of the package. That's what *makes* it a
 package.
 
-Once you've run [`pub get`](cmd/pub-get.html) or [`pub
-upgrade`](cmd/pub-upgrade.html) on the package, you will also have a
+Once you've run [`pub get`](cmd/pub-get.html),
+[`pub upgrade`](cmd/pub-upgrade.html), or
+[`pub downgrade`](cmd/pub-downgrade.html) on the package, you will also have a
 **lockfile**, named `pubspec.lock`. If your package is an [application
 package](glossary.html#application-package), this will be checked into source
 control. Otherwise, it won't be.
 
-    enchilada/
-      packages/
-        ...
+{% prettify none %}
+enchilada/
+  packages/
+    ...
+{% endprettify %}
 
-Running pub will also generate a `packages` directory. You will *not* check
+Running pub also generates a `packages` directory. You will *not* check
 this into source control, and you won't need to worry too much about its
 contents. Consider it pub magic, but not scary magic.
 
@@ -96,26 +124,55 @@ For more information, see [Pubspec Format](pubspec.html).
 
 ## README
 
-    enchilada/
-      README.md
+{% prettify none %}
+enchilada/
+  README.md
+{% endprettify %}
 
 One file that's very common in open source is a README file that
 describes the project. This is especially important in pub. When you upload
-to [pub.dartlang.org](http://pub.dartlang.org), your README will be shown on
+to [pub.dartlang.org](https://pub.dartlang.org), your README is shown on
 the page for your package. This is the perfect place to introduce people to
 your code.
 
-If your README ends in `.md`, `.markdown`, or `.mdown`, it will be parsed as
+If your README ends in `.md`, `.markdown`, or `.mdown`, it is parsed as
 [Markdown][].
 
 [markdown]: http://daringfireball.net/projects/markdown/
 
-## Public libraries
+## CHANGELOG
 
-    enchilada/
-      lib/
-        enchilada.dart
-        tortilla.dart
+{% prettify none %}
+enchilada/
+  CHANGELOG.md
+{% endprettify %}
+
+To show users the latest changes to your package, you can include a changelog
+file where you can write a short note about the changes in your latest
+release. When you upload your package to
+[pub.dartlang.org](https://pub.dartlang.org)
+it detects that your package contains a changelog file and shows
+it in the changelog tab.
+
+If your CHANGELOG ends in `.md`, `.markdown`, or `.mdown`, it is parsed as
+[Markdown][].
+
+## Public directories
+
+Two directories in your package are public to other packages: `lib` and
+`bin`. You place [public libraries](#public-libraries) in `lib` and
+[public tools](#public-tools) in `bin`.
+
+### Public libraries {#public-libraries}
+
+The following directory structure shows the `lib` portion of enchilada:
+
+{% prettify none %}
+enchilada/
+  lib/
+    enchilada.dart
+    tortilla.dart
+{% endprettify %}
 
 Many packages are [*library packages*](glossary.html#library-package): they
 define Dart libraries that other packages can import and use. These public Dart
@@ -130,24 +187,26 @@ When you do, users can import these libraries using the name of the package and
 the library file, like so:
 
 {% prettify dart %}
-import "package:enchilada/enchilada.dart";
-import "package:enchilada/tortilla.dart";
+import 'package:enchilada/enchilada.dart';
+import 'package:enchilada/tortilla.dart';
 {% endprettify %}
 
 If you want to organize your public libraries, you can also create
 subdirectories inside `lib`. If you do that, users will specify that path when
 they import it. Say you have the following file hierarchy:
 
-    enchilada/
-      lib/
-        some/
-          path/
-            olives.dart
+{% prettify none %}
+enchilada/
+  lib/
+    some/
+      path/
+        olives.dart
+{% endprettify %}
 
-Users will import `olives.dart` as follows:
+Users import `olives.dart` as follows:
 
 {% prettify dart %}
-import "package:enchilada/some/path/olives.dart";
+import 'package:enchilada/some/path/olives.dart';
 {% endprettify %}
 
 Note that only *libraries* should be in `lib`. *Entrypoints*&mdash;Dart scripts
@@ -156,12 +215,28 @@ inside `lib`, you will discover that any `package:` imports it contains don't
 resolve. Instead, your entrypoints should go in the appropriate
 [entrypoint directory](glossary.html#entrypoint-directory).
 
+For more information on library packages, see
+[Creating Library Packages](create-library-packages.html).
+
+### Public tools {#public-tools}
+
+Dart scripts placed inside of the `bin` directory are public. Any package
+that depends on your package can run scripts from your package's `bin`
+directory using [`pub run`](cmd/pub-run.html). <em>Any</em> package can run scripts
+from your package's bin directory using [`pub global`](cmd/pub-global.html).
+
+If you intend for your package to be depended on,
+and you want your scripts to be private to your package, place them
+in the top-level `tool` directory.
+If you do not intend for your package to be depended on, you can leave your
+scripts in `bin`.
+
 ## Referencing packages
 
 You can, of course, reference a package from within your app.
 For example, say your source tree looks like this:
 
-{% prettify lang-sh %}
+{% prettify none %}
 myapp/
   example/
     one/
@@ -171,7 +246,7 @@ myapp/
 
 The resulting build directory has the following structure:
 
-{% prettify lang-sh %}
+{% prettify none %}
 build/
   example/
     one/
@@ -191,9 +266,11 @@ deploy your app.
 
 ## Public assets
 
-    enchilada/
-      lib/
-        guacamole.css
+{% prettify none %}
+enchilada/
+  lib/
+    guacamole.css
+{% endprettify %}
 
 While most library packages exist to let you reuse Dart code, you can also
 reuse other kinds of content. For example, a package for
@@ -209,9 +286,8 @@ containing the asset and `<path>` is the relative path to the asset within that
 package's `lib` directory.
 
 <aside class="alert alert-info" markdown="1">
-Prior to Dart 1.4, assets were also placed in the top-level
-<tt>asset</tt> directory. The <tt>asset</tt> directory is being deprecated
-and will be removed from 1.4.
+In earlier releases, assets were also placed in the top-level
+`asset` directory. Pub no longer recognizes the `asset` directory.
 </aside>
 
 For example, let's say your package wanted to use enchilada's `guacamole.css`
@@ -222,18 +298,23 @@ styles. In an HTML file in your package, you can add:
 {% endprettify %}
 
 When you run your application using [`pub serve`](cmd/pub-serve.html), or build
-it to something deployable using [`pub build`](cmd/pub-build.html), pub will
-copy over any referenced assets that your package depends on.
+it to something deployable using [`pub build`](cmd/pub-build.html), pub
+copies over any referenced assets that your package depends on.
+
+For more information about using assets, see
+[Pub Assets and Transformers](assets-and-transformers.html).
 
 ## Implementation files
 
-    enchilada/
-      lib/
-        src/
-          beans.dart
-          queso.dart
+{% prettify none %}
+enchilada/
+  lib/
+    src/
+      beans.dart
+      queso.dart
+{% endprettify %}
 
-The libraries inside "lib" are publicly visible: other packages are free to
+The libraries inside `lib` are publicly visible: other packages are free to
 import them. But much of a package's code is internal implementation libraries
 that should only be imported and used by the package itself. Those go inside a
 subdirectory of `lib` called `src`. You can create subdirectories in there if
@@ -246,11 +327,11 @@ Those files are not part of the package's public API, and they might change in
 ways that could break your code.
 
 When you use libraries from within your own package, even code in `src`, you
-can (and should) still use `"package:"` to import them. This is perfectly
+can (and should) still use `package:` to import them. This is perfectly
 legit:
 
 {% prettify dart %}
-import "package:enchilada/src/beans.dart";
+import 'package:enchilada/src/beans.dart';
 {% endprettify %}
 
 The name you use here (in this case `enchilada`) is the name you specify for
@@ -258,11 +339,13 @@ your package in its [pubspec](pubspec.html).
 
 ## Web files
 
-    enchilada/
-      web/
-        index.html
-        main.dart
-        style.css
+{% prettify none %}
+enchilada/
+  web/
+    index.html
+    main.dart
+    style.css
+{% endprettify %}
 
 Dart is a web language, so many pub packages will be doing web stuff. That
 means HTML, CSS, images, and, heck, probably even some JavaScript. All of that
@@ -276,13 +359,15 @@ That ensures that a `packages` directory is created nearby so that `package:`
 imports can be resolved correctly.
 
 (You may be asking whether you should put your web-based example programs
-in `example` or `web`?" Put those in `example`.)
+in `example` or `web`? Put those in `example`.)
 
 ## Command-line apps
 
-    enchilada/
-      bin/
-        enchilada
+{% prettify none %}
+enchilada/
+  bin/
+    enchilada
+{% endprettify %}
 
 Some packages define programs that can be run directly from the command line.
 These can be shell scripts or any other scripting language, including Dart.
@@ -290,29 +375,30 @@ The `pub` application itself is one example: it's a simple shell script that
 invokes `pub.dart`.
 
 If your package defines code like this, put it in a directory named `bin`.
-
-<aside class="alert alert-note">
-At some point, pub will support automatically adding that directory to your
-system path so that these scripts can be easily invoked.
-</aside>
+You can run that script from anywhere on the command line, if you set it up
+using [pub global](cmd/pub-global.html#running-a-script-from-your-path).
 
 ## Tests and benchmarks
 
-    enchilada/
-      test/
-        enchilada_test.dart
-        tortilla_test.dart
+{% prettify none %}
+enchilada/
+  test/
+    enchilada_test.dart
+    tortilla_test.dart
+{% endprettify %}
 
 Every package should have tests. With pub, the convention is
 that these go in a `test` directory (or some directory inside it if you like)
 and have `_test` at the end of their file names.
 
-Typically, these use the [unittest](http://api.dartlang.org/unittest.html)
+Typically, these use the [test](https://pub.dartlang.org/packages/test)
 package.
 
-    enchilada/
-      benchmark/
-        make_lunch.dart
+{% prettify none %}
+enchilada/
+  benchmark/
+    make_lunch.dart
+{% endprettify %}
 
 Packages that have performance critical code may also include *benchmarks*.
 These test the API not for correctness but for speed (or memory use, or maybe
@@ -320,26 +406,32 @@ other empirical metrics).
 
 ## Documentation
 
-    enchilada/
-      doc/
-        getting_started.md
+{% prettify none %}
+enchilada/
+  doc/
+    api/
+    getting_started.md
+{% endprettify %}
 
 If you've got code and tests, the next piece you might want
-is good documentation. That goes inside a directory named `doc`. We don't
-currently have any guidelines about format or organization within that. Use
-whatever markup format that you prefer.
+is good documentation. That goes inside a directory named `doc`.
 
-This directory should *not* just contain docs generated automatically
-from your source code using [docgen](/tools/docgen/). Since that's
-pulled directly from the code already in the package, putting those docs in
-here would be redundant. Instead, this is for tutorials, guides, and other
-hand-authored documentation *in addition to* generated API references.
+When you run the [dartdoc](https://github.com/dart-lang/dartdoc#dartdoc)
+tool, it places the API documentation, by default, under `doc/api`.
+Since the API documentation is generated from the source code,
+you should not place it under source control.
+
+Other than the generated `api`, we don't
+have any guidelines about format or organization of the documentation
+that you author.  Use whatever markup format that you prefer.
 
 ## Examples
 
-    enchilada/
-      example/
-        lunch.dart
+{% prettify none %}
+enchilada/
+  example/
+    lunch.dart
+{% endprettify %}
 
 Code, tests, docs, what else
 could your users want? Standalone example programs that use your package, of
@@ -353,9 +445,11 @@ like code outside of your package would look.
 
 ## Internal tools and scripts
 
-    enchilada/
-      tool/
-        generate_docs.dart
+{% prettify none %}
+enchilada/
+  tool/
+    generate_docs.dart
+{% endprettify %}
 
 Mature packages often have little helper scripts and programs that people
 run while developing the package itself. Think things like test runners,
